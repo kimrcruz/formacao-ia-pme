@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onboarding Approaches</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    /* comparison page chrome */
+    --bg:#EDEAE3; --card:#FFFFFF; --text:#1F1F1F; --sub:#5B5B5B; --line:#D6D1C6; --chip:#F1EEE7;
+    --gain:#2F6B45; --cost:#9A3B2E; --frame:#151515;
+    /* IA Lab palette used inside the mockups (fixed, it is the product) */
+    --cream:#F4EFE4; --paper:#FBF8F1; --forest:#1B3A2D; --sage:#8AA08D; --ink:#262626; --soft:#E9E2D2; --muted:#5E6B61;
+    --serif:Georgia,"Times New Roman","Noto Serif",serif;
+    --sans:Arial,"Helvetica Neue",Helvetica,Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){--bg:#17181A;--card:#212326;--text:#ECECEC;--sub:#A7A7A7;--line:#3A3D42;--chip:#2C2F33;--gain:#7CC495;--cost:#E58C7D;--frame:#000}
+  }
+  :root[data-theme="dark"]{--bg:#17181A;--card:#212326;--text:#ECECEC;--sub:#A7A7A7;--line:#3A3D42;--chip:#2C2F33;--gain:#7CC495;--cost:#E58C7D;--frame:#000}
+
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--sans);padding:28px 16px 48px}
+  .page{max-width:1200px;margin:0 auto}
+  .intro h1{font:700 28px/1.15 var(--serif);margin:0 0 8px}
+  .intro p{margin:0 0 6px;color:var(--sub);max-width:760px}
+
+  table.sum{width:100%;border-collapse:collapse;margin:22px 0 30px;font-size:13px;background:var(--card);border:1px solid var(--line)}
+  .sumwrap{overflow-x:auto}
+  table.sum th,table.sum td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.sum th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+  table.sum tr:last-child td{border-bottom:0}
+  .dots{letter-spacing:2px;white-space:nowrap}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(352px,1fr));gap:22px}
+  @media (max-width:400px){.grid{grid-template-columns:1fr}}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px 20px;display:flex;flex-direction:column;gap:14px}
+  .opt header .num{font:700 12px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--sub)}
+  .opt header h2{font:700 21px/1.2 var(--serif);margin:4px 0 0}
+  .trade{font:700 15px/1.3 var(--sans);padding:10px 12px;border-left:4px solid var(--text);background:var(--chip);border-radius:0 8px 8px 0}
+  .trade small{display:block;font-weight:400;font-size:12px;color:var(--sub);letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips span{font-size:12px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--sub)}
+  .chips b{color:var(--text);font-weight:700}
+  .gc{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px}
+  .gc h3{margin:0 0 4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+  .gc .g h3{color:var(--gain)} .gc .c h3{color:var(--cost)}
+  .gc ul{margin:0;padding-left:16px} .gc li{margin-bottom:4px}
+  @media (max-width:400px){.gc{grid-template-columns:1fr}}
+
+  /* phone frame */
+  .phone{width:320px;max-width:100%;height:620px;margin:0 auto;border:9px solid var(--frame);border-radius:30px;overflow:hidden;background:var(--cream);position:relative}
+  .screen{height:100%;overflow-y:auto;background:var(--cream);color:var(--ink);font:15px/1.45 var(--sans);padding:22px 16px 26px;text-align:left}
+  .screen a{color:inherit}
+  .note{font-size:12px;color:var(--sub);text-align:center;margin-top:-6px}
+
+  /* shared mockup atoms */
+  .m-mark{font:italic 700 26px/1 var(--serif);color:var(--forest)}
+  .m-kick{font:700 11px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--forest)}
+  .m-h1{font:700 26px/1.12 var(--serif);color:var(--forest);margin:6px 0 0}
+  .m-lead{margin:8px 0 0;font-size:14px}
+  .m-foot{font-size:11px;color:var(--muted);border-top:1px solid var(--sage);padding-top:8px;margin-top:18px}
+  .screen .m-btn{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;background:var(--forest);color:var(--cream);border:0;padding:16px;font:700 16px/1.2 var(--sans);text-decoration:none;cursor:pointer}
+  .screen .m-btn .go{font:26px/1 var(--serif)}
+  .m-link{display:block;text-align:center;font-size:14px;color:var(--forest);text-decoration:underline;margin-top:12px}
+
+  /* 1 · full menu */
+  .s1 .sec{margin-top:16px}
+  .s1 .sec h4{font:700 10px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;padding-bottom:5px;border-bottom:1px solid var(--sage)}
+  .s1 .ex{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--sage);padding:9px 10px;margin-bottom:6px}
+  .s1 .ex .n{font:700 16px var(--serif);color:var(--sage)}
+  .s1 .ex b{display:block;font:700 15px/1.2 var(--serif);color:var(--forest)}
+  .s1 .ex span.d{font-size:12px;color:var(--muted)}
+  .s1 .ex .go{font:22px var(--serif);color:var(--forest)}
+
+  /* 2 · one button */
+  .s2{display:flex;flex-direction:column;justify-content:space-between;padding-top:40px}
+  .s2 .m-h1{font-size:31px;margin-top:22px}
+  .s2 .meta{margin-top:14px;font-size:13px;color:var(--muted)}
+  .s2 .bottom{margin-top:auto}
+  .s2 .m-btn{padding:20px 16px;font-size:17px}
+
+  /* 3 · lesson picker */
+  .s3 .live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--forest);background:var(--soft);padding:4px 10px;border-radius:999px}
+  .s3 .live i{width:8px;height:8px;border-radius:50%;background:#C0533F;display:inline-block}
+  .s3 .tile{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center;border:1px solid var(--sage);background:var(--paper);padding:14px 12px;margin-top:10px}
+  .s3 .tile .big{font:700 40px/1 var(--serif);color:var(--sage);text-align:center}
+  .s3 .tile b{display:block;font:700 17px/1.2 var(--serif);color:var(--forest)}
+  .s3 .tile span{font-size:12px;color:var(--muted)}
+  .s3 .tile.on{background:var(--forest);border-color:var(--forest)}
+  .s3 .tile.on .big{color:var(--sage)} .s3 .tile.on b{color:var(--cream)} .s3 .tile.on span{color:#C9D3C8}
+  .s3 .open{border:1px solid var(--forest);border-top:0;background:var(--paper);padding:6px 12px 10px}
+  .s3 .open a{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--soft);font:15px var(--serif);color:var(--forest);text-decoration:none}
+  .s3 .open a:last-child{border-bottom:0}
+
+  /* 4 · story */
+  .s4 .scene{background:var(--forest);margin:-22px -16px 0;padding:22px 16px 18px;color:var(--cream)}
+  .s4 .scene .m-kick{color:var(--sage)}
+  .s4 .scene h3{font:700 25px/1.15 var(--serif);margin:8px 0 0;color:var(--cream)}
+  .s4 svg{display:block;margin:14px auto 0}
+  .s4 .bubble{position:relative;background:var(--paper);border:1px solid var(--sage);padding:12px;margin:18px 0 0;font:italic 15px/1.4 var(--serif);color:var(--forest)}
+  .s4 .bubble::before{content:"";position:absolute;top:-8px;left:22px;width:14px;height:14px;background:var(--paper);border-left:1px solid var(--sage);border-top:1px solid var(--sage);transform:rotate(45deg)}
+  .s4 .bubble cite{display:block;font:normal 11px var(--sans);color:var(--muted);margin-top:6px}
+  .s4 p{font-size:14px;margin:14px 0 0}
+  .s4 ul{margin:8px 0 16px;padding-left:18px;font-size:14px}
+
+  /* 5 · path */
+  .s5 .budget{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--muted)}
+  .s5 .budget b{display:block;font:700 20px/1 var(--serif);color:var(--forest)}
+  .s5 ol{list-style:none;margin:18px 0 0;padding:0;position:relative}
+  .s5 ol::before{content:"";position:absolute;left:13px;top:6px;bottom:6px;width:2px;background:var(--sage)}
+  .s5 li{position:relative;padding:0 0 14px 40px}
+  .s5 li .dot{position:absolute;left:4px;top:1px;width:20px;height:20px;border-radius:50%;background:var(--cream);border:2px solid var(--sage);font:700 11px/16px var(--sans);text-align:center;color:var(--muted)}
+  .s5 li b{display:block;font:700 15px/1.2 var(--serif);color:var(--forest)}
+  .s5 li span{font-size:12px;color:var(--muted)}
+  .s5 li.here .dot{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+  .s5 li.here .card{background:var(--paper);border:1px solid var(--forest);padding:10px;margin-top:-4px}
+  .s5 li.here .tag{display:inline-block;font:700 10px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--cream);background:var(--forest);padding:2px 6px;margin-bottom:4px}
+  .s5 li.stage{padding-bottom:8px}
+  .s5 li.stage .dot{border:0;background:transparent}
+  .s5 li.stage em{font:700 10px/20px var(--sans);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* 6 · dive in */
+  .s6 .q{background:var(--paper);border:1px solid var(--sage);padding:14px;margin-top:14px}
+  .s6 .q .label{font:700 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .s6 .q blockquote{margin:8px 0 0;font:19px/1.3 var(--serif);color:var(--forest)}
+  .s6 .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .s6 .ans button{font:700 16px var(--sans);padding:14px 0;border:2px solid var(--forest);background:var(--cream);color:var(--forest);cursor:pointer}
+  .s6 .ans button:hover{background:var(--soft)}
+  .s6 .fb{display:none;margin-top:12px;font-size:14px;border-left:3px solid var(--forest);padding:4px 0 4px 10px}
+  .s6 .fb.show{display:block}
+  .s6 .fb b{color:var(--forest)}
+  .s6 .after{margin-top:22px;border-top:1px solid var(--sage);padding-top:12px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<section class="intro">
+  <h1>Onboarding screen: six directions</h1>
+  <p>The first screen a participant sees after scanning the QR code at the workshop (today that's <code>workshop-chatgpt/index.html</code>). All six keep the same constraints: phone first, no external assets, works on a weak connection, nothing saved, IA Lab palette. They differ in layout, tone and density.</p>
+  <p>Each phone scrolls on its own. In option 6 the question works, so you can tap an answer.</p>
+</section>
+
+<div class="sumwrap">
+<table class="sum">
+  <thead><tr><th>#</th><th>Approach</th><th>Layout</th><th>Tone</th><th>Density</th><th>Taps to first exercise</th><th>Tradeoff</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Full menu</td><td>Grouped list</td><td>Neutral, instructional</td><td class="dots">●●●●●</td><td>1 (after choosing)</td><td>Overview over momentum</td></tr>
+    <tr><td>2</td><td>One button</td><td>Single CTA hero</td><td>Calm, confident</td><td class="dots">●○○○○</td><td>1 (no choice)</td><td>Momentum over orientation</td></tr>
+    <tr><td>3</td><td>Lesson picker</td><td>3 big tiles</td><td>Live, in-the-room</td><td class="dots">●●○○○</td><td>2</td><td>Room sync over self-service</td></tr>
+    <tr><td>4</td><td>Acácia's story</td><td>Narrative scene</td><td>Warm, personal</td><td class="dots">●●●○○</td><td>1 (after reading)</td><td>Motivation over speed</td></tr>
+    <tr><td>5</td><td>The path</td><td>Vertical timeline</td><td>Structured, course-like</td><td class="dots">●●●●○</td><td>1</td><td>Sequence over flexibility</td></tr>
+    <tr><td>6</td><td>Dive in</td><td>Question card</td><td>Playful, challenge</td><td class="dots">●○○○○</td><td>0 (you're already in)</td><td>Doing over explaining</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="grid">
+
+<!-- 1 -->
+<article class="opt">
+  <header><div class="num">Option 1</div><h2>Full menu</h2></header>
+  <div class="trade"><small>Tradeoff</small>Overview over momentum</div>
+  <div class="chips"><span><b>Layout</b> grouped list</span><span><b>Tone</b> neutral</span><span><b>Density</b> high</span></div>
+  <div class="phone"><div class="screen s1">
+    <div class="m-mark">ia</div>
+    <div class="m-kick" style="margin-top:10px">IA Lab · Maputo</div>
+    <div class="m-h1">ChatGPT: primeiros passos na prática</div>
+    <p class="m-lead">Exercícios do workshop. Sem conta e sem registo. Funcionam com a rede fraca.</p>
+    <div class="sec"><h4>Lição 1 · Pedir melhor</h4>
+      <div class="ex"><span class="n">1</span><span><b>Bom ou fraco?</b><span class="d">Oito pedidos para avaliar</span></span><span class="go">›</span></div>
+      <div class="ex"><span class="n">2</span><span><b>O que falta?</b><span class="d">Tarefa, Contexto ou Expectativa</span></span><span class="go">›</span></div>
+      <div class="ex"><span class="n">3</span><span><b>Monta o pedido</b><span class="d">Arruma os bocados nos blocos</span></span><span class="go">›</span></div>
+      <div class="ex"><span class="n">4</span><span><b>Apanha a invenção</b><span class="d">O que ele inventou?</span></span><span class="go">›</span></div>
+    </div>
+    <div class="sec"><h4>Lição 2 · Pesquisar e comunicar</h4>
+      <div class="ex"><span class="n">5</span><span><b>De onde veio?</b><span class="d">Conversa, pesquisa ou ficheiro</span></span><span class="go">›</span></div>
+    </div>
+    <div class="sec"><h4>Lição 3 · Work</h4>
+      <div class="ex"><span class="n">6</span><span><b>Rápido ou raciocínio?</b><span class="d">Que modelo usar</span></span><span class="go">›</span></div>
+      <div class="ex"><span class="n">7</span><span><b>Encontra as excepções</b><span class="d">Comprovativos vs. extracto M-Pesa</span></span><span class="go">›</span></div>
+      <div class="ex"><span class="n">8</span><span><b>Escolhe o primeiro fluxo</b><span class="d">Os cinco critérios do funil</span></span><span class="go">›</span></div>
+    </div>
+    <div class="m-foot">Os exemplos usam a Pastelaria Acácia, um negócio fictício. As páginas não guardam respostas.</div>
+  </div></div>
+  <div class="note">Closest to what's live today</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>Every exercise one tap away</li><li>Latecomers jump straight to lesson 3</li><li>The shape of the day is visible</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>Eight equal-weight choices up front</li><li>Nothing says where to start</li><li>Densest first screen; long scroll on small phones</li></ul></div>
+  </div>
+</article>
+
+<!-- 2 -->
+<article class="opt">
+  <header><div class="num">Option 2</div><h2>One button</h2></header>
+  <div class="trade"><small>Tradeoff</small>Momentum over orientation</div>
+  <div class="chips"><span><b>Layout</b> single CTA</span><span><b>Tone</b> calm, confident</span><span><b>Density</b> minimal</span></div>
+  <div class="phone"><div class="screen s2">
+    <div>
+      <div class="m-mark">ia</div>
+      <div class="m-h1">Vamos começar pelo primeiro exercício.</div>
+      <p class="meta">8 exercícios curtos · 3 lições<br>Sem conta, sem registo.</p>
+    </div>
+    <div class="bottom">
+      <a class="m-btn" href="#" onclick="return false"><span>Começar: Bom ou fraco?</span><span class="go">›</span></a>
+      <a class="m-link" href="#" onclick="return false">Ver todos os exercícios</a>
+      <div class="m-foot">IA Lab · Pastelaria Acácia é um negócio fictício.</div>
+    </div>
+  </div></div>
+  <div class="note">Button sits in the thumb zone</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>No decision to make</li><li>Largest, easiest touch target</li><li>Lightest page on a slow network</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>Hides the structure of the workshop</li><li>Anyone past lesson 1 needs an extra tap</li><li>Feels thin when reopened at home</li></ul></div>
+  </div>
+</article>
+
+<!-- 3 -->
+<article class="opt">
+  <header><div class="num">Option 3</div><h2>Lesson picker</h2></header>
+  <div class="trade"><small>Tradeoff</small>Room sync over self-service</div>
+  <div class="chips"><span><b>Layout</b> 3 tiles, one open</span><span><b>Tone</b> live, in-the-room</span><span><b>Density</b> low</span></div>
+  <div class="phone"><div class="screen s3">
+    <span class="live"><i></i> Workshop ao vivo</span>
+    <div class="m-h1" style="margin-top:14px">Em que lição estamos?</div>
+    <p class="m-lead">Olha para o ecrã da sala e toca na mesma lição.</p>
+    <div class="tile on"><span class="big">1</span><span><b>Pedir melhor</b><span>4 exercícios</span></span></div>
+    <div class="open">
+      <a href="#" onclick="return false">1 · Bom ou fraco? <span>›</span></a>
+      <a href="#" onclick="return false">2 · O que falta? <span>›</span></a>
+      <a href="#" onclick="return false">3 · Monta o pedido <span>›</span></a>
+      <a href="#" onclick="return false">4 · Apanha a invenção <span>›</span></a>
+    </div>
+    <div class="tile"><span class="big">2</span><span><b>Pesquisar e comunicar</b><span>1 exercício</span></span></div>
+    <div class="tile"><span class="big">3</span><span><b>Work</b><span>3 exercícios</span></span></div>
+    <div class="m-foot">IA Lab · Maputo · As páginas não guardam respostas.</div>
+  </div></div>
+  <div class="note">Lesson 1 shown expanded</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>Mirrors what's on the projector</li><li>Three choices instead of eight</li><li>Fits the uneven lesson sizes (4 / 1 / 3)</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>Relies on someone naming the lesson</li><li>“Ao vivo” reads oddly after the event</li><li>Two taps to reach an exercise</li></ul></div>
+  </div>
+</article>
+
+<!-- 4 -->
+<article class="opt">
+  <header><div class="num">Option 4</div><h2>Acácia's story</h2></header>
+  <div class="trade"><small>Tradeoff</small>Motivation over speed</div>
+  <div class="chips"><span><b>Layout</b> narrative scene</span><span><b>Tone</b> warm, personal</span><span><b>Density</b> medium</span></div>
+  <div class="phone"><div class="screen s4">
+    <div class="scene">
+      <div class="m-kick">Pastelaria Acácia · Maputo</div>
+      <h3>A Acácia precisa de ajuda com o ChatGPT.</h3>
+      <svg width="120" height="78" viewBox="0 0 120 78" aria-hidden="true">
+        <rect x="18" y="44" width="84" height="28" rx="3" fill="#F4EFE4"/>
+        <rect x="28" y="24" width="64" height="22" rx="3" fill="#E9E2D2"/>
+        <path d="M18 52 q10 8 21 0 t21 0 t21 0 t21 0" fill="none" stroke="#8AA08D" stroke-width="3"/>
+        <rect x="58" y="8" width="4" height="16" fill="#E9E2D2"/>
+        <ellipse cx="60" cy="6" rx="3" ry="5" fill="#E8B04B"/>
+        <rect x="10" y="72" width="100" height="4" rx="2" fill="#8AA08D"/>
+      </svg>
+    </div>
+    <div class="bubble">“Pedi-lhe ideias de promoções e deu-me ideias que serviam a uma sapataria.”<cite>A dona da pastelaria</cite></div>
+    <p>Tem encomendas a chegar pelo WhatsApp, comprovativos M-Pesa por conferir e clientes à espera de resposta. Em oito exercícios vais ajudá-la a:</p>
+    <ul><li>pedir melhor</li><li>apanhar o que ele inventa</li><li>escolher o que automatizar primeiro</li></ul>
+    <a class="m-btn" href="#" onclick="return false"><span>Ajudar a Acácia</span><span class="go">›</span></a>
+    <a class="m-link" href="#" onclick="return false">Ir directo a um exercício</a>
+    <div class="m-foot">A Pastelaria Acácia é um negócio fictício. As páginas não guardam respostas.</div>
+  </div></div>
+  <div class="note">Uses the fictional business already in every exercise</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>Every exercise gets a “why”</li><li>Less intimidating for first-time AI users</li><li>Frames the fictional-business note naturally</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>Most reading before the first tap</li><li>The story has to hold across all 8 exercises</li><li>Can feel light for senior business owners</li></ul></div>
+  </div>
+</article>
+
+<!-- 5 -->
+<article class="opt">
+  <header><div class="num">Option 5</div><h2>The path</h2></header>
+  <div class="trade"><small>Tradeoff</small>Sequence over flexibility</div>
+  <div class="chips"><span><b>Layout</b> vertical timeline</span><span><b>Tone</b> structured, course-like</span><span><b>Density</b> high</span></div>
+  <div class="phone"><div class="screen s5">
+    <div class="m-kick">IA Lab · ChatGPT na prática</div>
+    <div class="m-h1">O teu percurso</div>
+    <div class="budget"><div><b>8</b>paragens</div><div><b>3</b>lições</div><div><b>~40</b>minutos</div></div>
+    <ol>
+      <li class="stage"><span class="dot"></span><em>Lição 1 · Pedir melhor</em></li>
+      <li class="here"><span class="dot">1</span><div class="card"><span class="tag">Começa aqui</span><b>Bom ou fraco?</b><span>Oito pedidos para avaliar · 4 min</span></div></li>
+      <li><span class="dot">2</span><b>O que falta?</b><span>Tarefa, Contexto ou Expectativa · 5 min</span></li>
+      <li><span class="dot">3</span><b>Monta o pedido</b><span>Arruma os bocados · 5 min</span></li>
+      <li><span class="dot">4</span><b>Apanha a invenção</b><span>O que ele inventou? · 5 min</span></li>
+      <li class="stage"><span class="dot"></span><em>Lição 2 · Pesquisar e comunicar</em></li>
+      <li><span class="dot">5</span><b>De onde veio?</b><span>Conversa, pesquisa ou ficheiro · 4 min</span></li>
+      <li class="stage"><span class="dot"></span><em>Lição 3 · Work</em></li>
+      <li><span class="dot">6</span><b>Rápido ou raciocínio?</b><span>Que modelo usar · 4 min</span></li>
+      <li><span class="dot">7</span><b>Encontra as excepções</b><span>Extracto M-Pesa · 7 min</span></li>
+      <li><span class="dot">8</span><b>Escolhe o primeiro fluxo</b><span>Cinco critérios · 6 min</span></li>
+    </ol>
+    <div class="m-foot">Pastelaria Acácia é um negócio fictício. As páginas não guardam respostas.</div>
+  </div></div>
+  <div class="note">Times are placeholders</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>Clear order and time budget</li><li>Sense of progress</li><li>Best for self-paced use after the event</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>Implies you must go in order</li><li>Ticking stops off means saving progress, which the pages avoid today</li><li>Tallest page, most scrolling</li></ul></div>
+  </div>
+</article>
+
+<!-- 6 -->
+<article class="opt">
+  <header><div class="num">Option 6</div><h2>Dive in</h2></header>
+  <div class="trade"><small>Tradeoff</small>Doing over explaining</div>
+  <div class="chips"><span><b>Layout</b> question card</span><span><b>Tone</b> playful challenge</span><span><b>Density</b> minimal</span></div>
+  <div class="phone"><div class="screen s6">
+    <div class="m-mark">ia</div>
+    <div class="m-kick" style="margin-top:10px">Antes de mais nada</div>
+    <div class="m-h1">Este pedido ao ChatGPT é bom ou fraco?</div>
+    <div class="q">
+      <div class="label">Pastelaria Acácia escreveu</div>
+      <blockquote>“Dá-me ideias de promoções.”</blockquote>
+      <div class="ans"><button type="button" data-a="bom">Bom</button><button type="button" data-a="fraco">Fraco</button></div>
+      <div class="fb" id="fb6"></div>
+    </div>
+    <div class="after">
+      Isto é o exercício 1. Há mais sete sobre pedir melhor, pesquisar e automatizar.
+      <a class="m-link" href="#" onclick="return false" style="text-align:left">Ver todos os exercícios</a>
+    </div>
+    <div class="m-foot">IA Lab · Maputo · Negócio fictício. Não guardamos respostas.</div>
+  </div></div>
+  <div class="note">Tap an answer</div>
+  <div class="gc">
+    <div class="g"><h3>Gains</h3><ul><li>Learning starts in five seconds</li><li>The hook proves the workshop's value</li><li>Tiny page</li></ul></div>
+    <div class="c"><h3>Costs</h3><ul><li>No frame for who or what this is</li><li>Repeats the first item of exercise 1</li><li>Awkward for someone looking for exercise 7</li></ul></div>
+  </div>
+</article>
+
+</div>
+</div>
+
+<script>
+  (function () {
+    var fb = document.getElementById("fb6");
+    document.querySelectorAll(".s6 .ans button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var right = b.getAttribute("data-a") === "fraco";
+        fb.innerHTML = (right ? "<b>Certo, é fraco.</b> " : "<b>Na verdade, é fraco.</b> ") +
+          "Ele não sabe que és uma pastelaria em Maputo nem para quando é a promoção. As ideias vão servir a qualquer negócio." +
+          '<a class="m-btn" href="#" onclick="return false" style="margin-top:12px"><span>Continuar o exercício</span><span class="go">›</span></a>';
+        fb.classList.add("show");
+      });
+    });
+  })();
+</script>
+</body>
+</html>
