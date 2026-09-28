@@ -9,7 +9,7 @@
   *,*::before,*::after{box-sizing:border-box}
   :root {
     --cream: #F4EFE4; --paper: #FBF8F1; --forest: #1B3A2D; --sage: #8AA08D;
-    --ink: #262626; --soft: #E9E2D2; --muted: #5E6B61;
+    --ink: #262626; --soft: #E9E2D2; --muted: #5E6B61; --pale: #C9D3C8;
     --serif: Georgia, "Times New Roman", "Noto Serif", serif;
     --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
   }
@@ -20,18 +20,44 @@
   .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
   h1 { font-family: var(--serif); font-size: 32px; line-height: 1.1; color: var(--forest); margin: 6px 0 0; text-wrap: balance; }
   .lead { margin: 8px 0 0; }
-  section { display: flex; flex-direction: column; gap: 8px; }
-  h2 { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--sage); }
-  a.ex { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; text-decoration: none; color: var(--ink); background: var(--paper); border: 1px solid var(--sage); padding: 14px; min-height: 64px; }
-  a.ex:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
-  a.ex:active { background: var(--soft); }
-  .n { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--sage); }
-  .t { display: flex; flex-direction: column; }
-  .t b { font-family: var(--serif); font-size: 19px; color: var(--forest); line-height: 1.2; }
-  .t span { font-size: 14px; color: var(--muted); margin-top: 2px; }
-  .go { font-family: var(--serif); font-size: 26px; color: var(--forest); }
-  .soon { opacity: .55; }
-  .soon .go { font: 700 11px/1 var(--sans); letter-spacing: .1em; color: var(--muted); }
+  section { display: flex; flex-direction: column; gap: 10px; }
+  h2 { font-family: var(--serif); font-size: 24px; line-height: 1.15; color: var(--forest); margin: 0; }
+  .hint { margin: -4px 0 2px; font-size: 15px; color: var(--muted); }
+  h3 { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--sage); }
+
+  /* Lições: um toque abre a lista da lição */
+  details { background: var(--paper); border: 1px solid var(--sage); }
+  details[open] { border-color: var(--forest); }
+  summary { list-style: none; display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 14px; min-height: 76px; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  details[open] summary { background: var(--forest); }
+  .big { font-family: var(--serif); font-weight: 700; font-size: 40px; line-height: 1; color: var(--sage); text-align: center; }
+  .lt { display: flex; flex-direction: column; }
+  .lt b { font-family: var(--serif); font-size: 20px; line-height: 1.2; color: var(--forest); }
+  .lt span { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  details[open] .lt b { color: var(--cream); }
+  details[open] .lt span { color: var(--pale); }
+  .tog { display: inline-block; font-family: var(--serif); font-size: 26px; line-height: 1; color: var(--forest); }
+  details[open] .tog { color: var(--cream); transform: rotate(90deg); }
+  .items { padding: 4px 14px 8px; }
+  .items a { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; min-height: 52px; padding: 8px 0; border-bottom: 1px solid var(--soft); text-decoration: none; color: var(--forest); }
+  .items a:last-child { border-bottom: 0; }
+  .items a:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .items a:active { background: var(--soft); }
+  .items .n { font-family: var(--serif); font-weight: 700; font-size: 18px; color: var(--sage); }
+  .items b { font-family: var(--serif); font-size: 18px; font-weight: 400; }
+  .items .go { font-family: var(--serif); font-size: 24px; }
+
+  /* Lista completa, para quem volta depois do workshop */
+  .all { display: flex; flex-direction: column; }
+  .all a { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--soft); text-decoration: none; color: var(--ink); }
+  .all a:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .all a:active { background: var(--soft); }
+  .all .n { font-family: var(--serif); font-weight: 700; color: var(--sage); }
+  .all b { font-family: var(--serif); font-weight: 700; color: var(--forest); }
+  .all span.d { display: block; font-size: 13px; color: var(--muted); }
+  .all .go { font-family: var(--serif); font-size: 20px; color: var(--forest); }
   footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
 </style>
 </head>
@@ -44,24 +70,49 @@
     <p class="lead">Exercícios do workshop. Fazem-se no telemóvel, sem conta e sem registo. Depois de a página abrir, funcionam mesmo com a rede fraca.</p>
   </header>
 
-  <section>
-    <h2>Lição 1 · Pedir melhor</h2>
-    <a class="ex" href="bom-ou-fraco.html"><span class="n">1</span><span class="t"><b>Bom ou fraco?</b><span>Oito pedidos para avaliar</span></span><span class="go">›</span></a>
-    <a class="ex" href="o-que-falta.html"><span class="n">2</span><span class="t"><b>O que falta?</b><span>Tarefa, Contexto ou Expectativa</span></span><span class="go">›</span></a>
-    <a class="ex" href="monta-o-pedido.html"><span class="n">3</span><span class="t"><b>Monta o pedido</b><span>Arruma os bocados nos blocos certos</span></span><span class="go">›</span></a>
-    <a class="ex" href="apanha-a-invencao.html"><span class="n">4</span><span class="t"><b>Apanha a invenção</b><span>O que ele inventou na resposta?</span></span><span class="go">›</span></a>
+  <section aria-labelledby="licoes">
+    <h2 id="licoes">Em que lição estamos?</h2>
+    <p class="hint">Na sala, olha para o ecrã e toca na mesma lição. Em casa, começa pela lição 1.</p>
+
+    <details>
+      <summary><span class="big">1</span><span class="lt"><b>Pedir melhor</b><span>4 exercícios</span></span><span class="tog" aria-hidden="true">›</span></summary>
+      <div class="items">
+        <a href="bom-ou-fraco.html"><span class="n">1</span><b>Bom ou fraco?</b><span class="go">›</span></a>
+        <a href="o-que-falta.html"><span class="n">2</span><b>O que falta?</b><span class="go">›</span></a>
+        <a href="monta-o-pedido.html"><span class="n">3</span><b>Monta o pedido</b><span class="go">›</span></a>
+        <a href="apanha-a-invencao.html"><span class="n">4</span><b>Apanha a invenção</b><span class="go">›</span></a>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="big">2</span><span class="lt"><b>Pesquisar e comunicar</b><span>1 exercício</span></span><span class="tog" aria-hidden="true">›</span></summary>
+      <div class="items">
+        <a href="de-onde-veio.html"><span class="n">5</span><b>De onde veio?</b><span class="go">›</span></a>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="big">3</span><span class="lt"><b>Work</b><span>3 exercícios</span></span><span class="tog" aria-hidden="true">›</span></summary>
+      <div class="items">
+        <a href="rapido-ou-raciocinio.html"><span class="n">6</span><b>Rápido ou raciocínio?</b><span class="go">›</span></a>
+        <a href="encontra-as-excepcoes.html"><span class="n">7</span><b>Encontra as excepções</b><span class="go">›</span></a>
+        <a href="escolhe-o-primeiro-fluxo.html"><span class="n">8</span><b>Escolhe o primeiro fluxo</b><span class="go">›</span></a>
+      </div>
+    </details>
   </section>
 
-  <section>
-    <h2>Lição 2 · Pesquisar e comunicar</h2>
-    <a class="ex" href="de-onde-veio.html"><span class="n">5</span><span class="t"><b>De onde veio?</b><span>Conversa, pesquisa ou ficheiro</span></span><span class="go">›</span></a>
-  </section>
-
-  <section>
-    <h2>Lição 3 · Work</h2>
-    <a class="ex" href="rapido-ou-raciocinio.html"><span class="n">6</span><span class="t"><b>Rápido ou raciocínio?</b><span>Que modelo usar em cada tarefa</span></span><span class="go">›</span></a>
-    <a class="ex" href="encontra-as-excepcoes.html"><span class="n">7</span><span class="t"><b>Encontra as excepções</b><span>Comprovativos contra o extracto M-Pesa</span></span><span class="go">›</span></a>
-    <a class="ex" href="escolhe-o-primeiro-fluxo.html"><span class="n">8</span><span class="t"><b>Escolhe o primeiro fluxo</b><span>Os cinco critérios do funil</span></span><span class="go">›</span></a>
+  <section aria-labelledby="todos">
+    <h3 id="todos">Todos os exercícios</h3>
+    <div class="all">
+      <a href="bom-ou-fraco.html"><span class="n">1</span><span><b>Bom ou fraco?</b><span class="d">Oito pedidos para avaliar</span></span><span class="go">›</span></a>
+      <a href="o-que-falta.html"><span class="n">2</span><span><b>O que falta?</b><span class="d">Tarefa, Contexto ou Expectativa</span></span><span class="go">›</span></a>
+      <a href="monta-o-pedido.html"><span class="n">3</span><span><b>Monta o pedido</b><span class="d">Arruma os bocados nos blocos certos</span></span><span class="go">›</span></a>
+      <a href="apanha-a-invencao.html"><span class="n">4</span><span><b>Apanha a invenção</b><span class="d">O que ele inventou na resposta?</span></span><span class="go">›</span></a>
+      <a href="de-onde-veio.html"><span class="n">5</span><span><b>De onde veio?</b><span class="d">Conversa, pesquisa ou ficheiro</span></span><span class="go">›</span></a>
+      <a href="rapido-ou-raciocinio.html"><span class="n">6</span><span><b>Rápido ou raciocínio?</b><span class="d">Que modelo usar em cada tarefa</span></span><span class="go">›</span></a>
+      <a href="encontra-as-excepcoes.html"><span class="n">7</span><span><b>Encontra as excepções</b><span class="d">Comprovativos contra o extracto M-Pesa</span></span><span class="go">›</span></a>
+      <a href="escolhe-o-primeiro-fluxo.html"><span class="n">8</span><span><b>Escolhe o primeiro fluxo</b><span class="d">Os cinco critérios do funil</span></span><span class="go">›</span></a>
+    </div>
   </section>
 
   <footer>Kim Cruz · IA Lab · Os exemplos usam a Pastelaria Acácia, um negócio fictício. As páginas não guardam respostas.</footer>
