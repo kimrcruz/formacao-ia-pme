@@ -16,7 +16,7 @@ Páginas HTML autónomas, sem dependências externas, pensadas para telemóvel e
 | 5 | de-onde-veio.html | 2 · Pesquisar e comunicar |
 | 6 | rapido-ou-raciocinio.html | 3 · Work |
 | 7 | encontra-as-excepcoes.html | 3 · Work |
-| 8 | escolhe-o-primeiro-fluxo.html | 3 · Work (em preparação) |
+| 8 | escolhe-o-primeiro-fluxo.html | 3 · Work |
 
 Publicado com GitHub Pages a partir da branch `main`, pasta raiz.
 Os exemplos usam a Pastelaria Acácia, um negócio fictício.

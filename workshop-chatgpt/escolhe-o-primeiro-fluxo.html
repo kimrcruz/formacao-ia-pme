@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Escolhe o primeiro fluxo</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;-webkit-text-size-adjust:100%}
+  [hidden]{display:none!important}
+  .back{display:inline-block;font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#1B3A2D;text-decoration:none;border-bottom:1.5px solid #8AA08D;padding-bottom:3px;margin-bottom:6px}
+  :root {
+    --cream: #F4EFE4; --paper: #FBF8F1; --forest: #1B3A2D; --sage: #8AA08D;
+    --ink: #262626; --soft: #E9E2D2; --red: #A4452F; --muted: #5E6B61;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 20px 32px; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 34px; line-height: 1.1; color: var(--forest); margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 6px 0 0; }
+
+  .crit { border: 1px solid var(--sage); background: var(--soft); padding: 12px 14px; }
+  .crit ol { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 15px; }
+  .crit li { display: grid; grid-template-columns: 26px 1fr; align-items: center; }
+  .crit li b { font-family: var(--serif); color: var(--forest); }
+
+  .progress { display: flex; align-items: center; gap: 10px; }
+  .bars { flex: 1; display: grid; gap: 4px; }
+  .bars i { height: 6px; background: var(--soft); border: 1px solid var(--sage); }
+  .bars i.ok { background: var(--forest); border-color: var(--forest); }
+  .bars i.ko { background: var(--red); border-color: var(--red); }
+  .bars i.now { border-color: var(--forest); border-width: 2px; }
+  .count { font-size: 13px; font-weight: 700; color: var(--forest); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .card { background: var(--paper); border: 1px solid var(--sage); padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .idea { font-family: var(--serif); font-size: 21px; line-height: 1.35; color: var(--forest); margin: 6px 0 0; }
+  .ask { font-weight: 700; color: var(--forest); margin: 0; }
+
+  .opts { display: grid; gap: 6px; }
+  .opt { text-align: left; font: 15px/1.3 var(--sans); padding: 12px; min-height: 48px; background: var(--cream); color: var(--ink); border: 1.5px solid var(--sage); cursor: pointer; -webkit-tap-highlight-color: transparent; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 6px; }
+  .opt b { font-family: var(--serif); color: var(--forest); }
+  .opt.pass { border-color: var(--forest); font-weight: 700; color: var(--forest); }
+  .opt:disabled { cursor: default; opacity: .4; }
+  .opt.picked { opacity: 1; background: var(--forest); border-color: var(--forest); color: var(--cream); }
+  .opt.picked b { color: var(--cream); }
+  .opt.picked.wrong { background: var(--red); border-color: var(--red); }
+  .opt.answer { opacity: 1; border: 3px solid var(--forest); }
+  .opt:focus-visible, .btn:focus-visible, .yn:focus-visible, textarea:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+
+  .feedback { border-top: 1px solid var(--sage); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .verdict { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--forest); margin: 0; }
+  .verdict.wrong { color: var(--red); }
+  .path { display: grid; gap: 4px; }
+  .path div { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--sage); padding: 7px 10px; font-size: 14px; }
+  .path div b { font-size: 11px; letter-spacing: .08em; padding: 3px 7px; border: 1px solid var(--forest); }
+  .path .y b { background: var(--forest); color: var(--cream); }
+  .path .n { border-color: var(--red); border-width: 1.5px; }
+  .path .n b { background: var(--red); border-color: var(--red); color: var(--cream); }
+  .path .skip { opacity: .4; }
+  .path .skip b { color: var(--muted); border-color: var(--sage); }
+  .why { margin: 0; }
+  .fix { border-left: 3px solid var(--forest); padding: 6px 0 6px 12px; }
+  .fix .label { color: var(--forest); }
+  .fix p { font-family: var(--serif); font-style: italic; color: var(--forest); margin: 4px 0 0; }
+
+  .btn { font: 700 17px/1 var(--sans); padding: 16px; min-height: 54px; width: 100%; background: var(--forest); color: var(--cream); border: 0; cursor: pointer; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+
+  .score { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--forest); margin: 0; font-variant-numeric: tabular-nums; }
+  .score small { font-size: 24px; color: var(--muted); }
+  .end-msg { font-family: var(--serif); font-size: 20px; color: var(--forest); margin: 0; }
+  .funnel { display: grid; gap: 5px; }
+  .frow { display: grid; grid-template-columns: 1fr 34px; gap: 8px; align-items: center; font-size: 13px; }
+  .fbar { height: 26px; background: var(--soft); border: 1px solid var(--sage); position: relative; }
+  .fbar i { position: absolute; inset: 0 auto 0 0; background: var(--forest); }
+  .fbar span { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--cream); font-weight: 700; font-size: 12px; white-space: nowrap; mix-blend-mode: normal; }
+  .frow em { font-style: normal; font-weight: 700; color: var(--forest); text-align: right; font-variant-numeric: tabular-nums; }
+  .chosen { background: var(--forest); color: var(--cream); padding: 12px 14px; }
+  .chosen b { display: block; font-size: 11px; letter-spacing: .14em; color: var(--sage); margin-bottom: 4px; }
+  .chosen p { margin: 0; font-family: var(--serif); font-size: 17px; }
+  .chosen p + p { margin-top: 4px; }
+
+  textarea { width: 100%; min-height: 72px; font: 16px/1.4 var(--sans); padding: 10px; border: 1.5px solid var(--sage); background: var(--cream); color: var(--ink); resize: vertical; }
+  .yncheck { display: grid; gap: 6px; }
+  .ynrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; border: 1px solid var(--sage); padding: 8px 10px; font-size: 14px; }
+  .ynbtns { display: flex; gap: 4px; }
+  .yn { font: 700 12px/1 var(--sans); letter-spacing: .06em; min-width: 50px; min-height: 38px; background: var(--paper); color: var(--forest); border: 1.5px solid var(--forest); cursor: pointer; }
+  .yn[aria-pressed="true"] { background: var(--forest); color: var(--cream); }
+  .yn.no[aria-pressed="true"] { background: var(--red); border-color: var(--red); }
+  .mine { border: 1.5px solid var(--forest); padding: 12px 14px; }
+  .mine.bad { border-color: var(--red); }
+  .mine b { font-family: var(--serif); font-size: 19px; color: var(--forest); display: block; }
+  .mine.bad b { color: var(--red); }
+  .mine p { margin: 4px 0 0; font-size: 15px; }
+
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .feedback, .card.end, .mine { animation: in .25s ease-out; }
+    @keyframes in { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Todos os exercícios</a>
+  <header>
+    <div class="kicker">IA Lab · Lição 3 · Work</div>
+    <h1>Escolhe o primeiro fluxo</h1>
+    <p class="lead">Sete ideias da Pastelaria Acácia para entregar ao Work. Passa cada uma pelos cinco critérios, por ordem. Diz se é boa para começar ou em que critério pára.</p>
+  </header>
+
+  <section class="crit" aria-label="Os cinco critérios">
+    <div class="label">Um bom primeiro fluxo</div>
+    <ol>
+      <li><b>1</b>Repete-se todas as semanas</li>
+      <li><b>2</b>Tem um resultado claro</li>
+      <li><b>3</b>Tem várias etapas</li>
+      <li><b>4</b>Tem pouco risco enquanto aprendes</li>
+      <li><b>5</b>É fácil de conferir</li>
+    </ol>
+  </section>
+
+  <div class="progress">
+    <div class="bars" id="bars"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <main id="stage"></main>
+
+  <footer>A Pastelaria Acácia é um negócio fictício. Esta página não guarda as tuas respostas nem o que escreves.</footer>
+</div>
+
+<script>
+const CRIT = ["Repete-se todas as semanas", "Tem um resultado claro", "Tem várias etapas", "Tem pouco risco enquanto aprendes", "É fácil de conferir"];
+// fail: índice 1-5 do primeiro critério que falha; 0 = passa todos
+const Q = [
+  { t: "Organizar a festa dos 10 anos da pastelaria.", fail: 1,
+    why: "Acontece uma vez. Construir um fluxo para uma festa não se paga, porque não o vais voltar a correr.",
+    fix: "Para a festa, basta o Chat. Guarda o Work para o que volta todas as semanas." },
+  { t: "Fechar os pagamentos M-Pesa da semana e preparar as cobranças.", fail: 0,
+    why: "Todas as sextas, com uma tabela no fim, várias etapas, nada é enviado sem ti, e confere-se contra o extracto.",
+    fix: "" },
+  { t: "Melhorar o atendimento aos clientes.", fail: 2,
+    why: "É um objectivo, não um trabalho. Ninguém sabe o que tem de estar pronto no fim.",
+    fix: "Responder às reclamações da semana e ver o que se repete." },
+  { t: "Corrigir os erros de cada post antes de publicar.", fail: 3,
+    why: "Repete-se e o resultado é claro, mas é um passo só. Basta um pedido no Chat.",
+    fix: "Preparar os posts de WhatsApp da semana: ideias, textos, revisão e calendário." },
+  { t: "Actualizar cada semana a tabela de preços com o custo da farinha e enviá-la aos clientes.", fail: 4,
+    why: "Se ele errar um preço, o erro vai direito aos clientes. Enquanto aprendes, isso é risco a mais.",
+    fix: "Calcular a nova tabela e deixá-la em rascunho. Tu confirmas e envias." },
+  { t: "Escrever cada semana um relatório de tendências da pastelaria em Moçambique.", fail: 5,
+    why: "Repete-se, tem resultado e etapas, e não sai para ninguém. Mas como confirmas que as tendências são verdadeiras? Não tens com que comparar.",
+    fix: "Resumir as encomendas da semana: o que mais se vendeu e para quem. Confere-se contra a folha." },
+  { t: "Planear a produção de sábado a partir das encomendas da semana.", fail: 0,
+    why: "Todas as semanas, com um plano no fim, várias etapas, tu revês antes de ligar os fornos, e confere-se contra as encomendas.",
+    fix: "" }
+];
+
+let i = 0, answers = [];
+const stage = document.getElementById("stage");
+const bars = document.getElementById("bars");
+bars.style.gridTemplateColumns = `repeat(${Q.length}, 1fr)`;
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function drawBars() {
+  bars.innerHTML = Q.map((q, k) => {
+    let c = "";
+    if (answers[k] !== undefined) c = answers[k] === q.fail ? "ok" : "ko";
+    else if (k === i) c = "now";
+    return `<i class="${c}"></i>`;
+  }).join("");
+  document.getElementById("count").textContent = i < Q.length ? `${i + 1} de ${Q.length}` : "Terminado";
+}
+
+function show() {
+  drawBars();
+  const q = Q[i];
+  stage.innerHTML = `
+    <section class="card">
+      <div><div class="label">Ideia ${i + 1}</div><p class="idea">${esc(q.t)}</p></div>
+      <p class="ask">Passa nos cinco? Se não, em qual pára primeiro?</p>
+      <div class="opts">
+        <button class="opt pass" id="o0" data-v="0"><b>✓</b>Bom para começar</button>
+        ${CRIT.map((c, k) => `<button class="opt" id="o${k + 1}" data-v="${k + 1}"><b>${k + 1}</b>Pára aqui: ${c.toLowerCase()}</button>`).join("")}
+      </div>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => answer(+b.dataset.v)));
+}
+
+function answer(v) {
+  const q = Q[i];
+  const right = v === q.fail;
+  answers[i] = v;
+  stage.querySelectorAll(".opt").forEach(b => b.disabled = true);
+  const b = document.getElementById("o" + v);
+  b.classList.add("picked");
+  if (!right) { b.classList.add("wrong"); document.getElementById("o" + q.fail).classList.add("answer"); }
+  const path = CRIT.map((c, k) => {
+    const n = k + 1;
+    if (q.fail === 0 || n < q.fail) return `<div class="y"><span>${n}. ${c}</span><b>SIM</b></div>`;
+    if (n === q.fail) return `<div class="n"><span>${n}. ${c}</span><b>NÃO</b></div>`;
+    return `<div class="skip"><span>${n}. ${c}</span><b>·</b></div>`;
+  }).join("");
+  const verdict = right
+    ? (q.fail ? `Certo. Pára no critério ${q.fail}.` : "Certo. Passa nos cinco.")
+    : (q.fail ? `Pára no critério ${q.fail}: ${CRIT[q.fail - 1].toLowerCase()}.` : "Esta passa nos cinco.");
+  const last = i === Q.length - 1;
+  document.getElementById("fb").innerHTML = `
+    <div class="feedback">
+      <p class="verdict ${right ? "" : "wrong"}">${verdict}</p>
+      <div class="path">${path}</div>
+      <p class="why">${esc(q.why)}</p>
+      ${q.fix ? `<div class="fix"><div class="label">Versão para começar</div><p>${esc(q.fix)}</p></div>` : ""}
+      <button class="btn" id="next">${last ? "Ver o resultado" : "Seguinte"}</button>
+    </div>`;
+  drawBars();
+  const next = document.getElementById("next");
+  next.addEventListener("click", () => { i++; i < Q.length ? show() : end(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  next.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function end() {
+  drawBars();
+  const score = answers.filter((a, k) => a === Q[k].fail).length;
+  // quantas ideias continuam depois de cada critério
+  const left = [Q.length].concat(CRIT.map((_, k) => Q.filter(q => q.fail === 0 || q.fail > k + 1).length));
+  const labels = ["Muitas ideias"].concat(CRIT);
+  const msg = score === Q.length ? "Todas certas. Já sabes escolher por onde começar."
+    : score >= 5 ? "Bom resultado. Relê as que falhaste: quase sempre há uma versão mais estreita que passa."
+    : "Pergunta sempre pela ordem: repete-se? tem fim claro? tem etapas? é seguro? consigo conferir?";
+  stage.innerHTML = `
+    <section class="card end">
+      <div><div class="label">O teu resultado</div><p class="score">${score}<small> / ${Q.length}</small></p></div>
+      <p class="end-msg">${msg}</p>
+      <div class="label">O funil</div>
+      <div class="funnel">${left.map((n, k) => `<div class="frow"><div class="fbar"><i style="width:${Math.max(n / Q.length * 100, 0)}%"></i><span>${k ? k + ". " : ""}${esc(labels[k])}</span></div><em>${n}</em></div>`).join("")}</div>
+      <div class="chosen"><b>PASSARAM NOS CINCO</b>${Q.filter(q => q.fail === 0).map(q => `<p>${esc(q.t)}</p>`).join("")}</div>
+      <button class="btn" id="own">Agora testa a tua ideia</button>
+      <button class="btn ghost" id="again">Fazer outra vez</button>
+    </section>`;
+  // as barras ficam legíveis mesmo quando estreitas
+  stage.querySelectorAll(".fbar").forEach(f => { const w = parseFloat(f.querySelector("i").style.width); if (w < 60) { f.querySelector("span").style.color = "var(--forest)"; f.querySelector("span").style.left = "calc(" + w + "% + 8px)"; } });
+  document.getElementById("own").addEventListener("click", () => { own(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  document.getElementById("again").addEventListener("click", () => { i = 0; answers = []; show(); window.scrollTo({ top: 0 }); });
+}
+
+function own() {
+  document.getElementById("count").textContent = "A tua ideia";
+  const yn = CRIT.map(() => null);
+  stage.innerHTML = `
+    <section class="card">
+      <div><div class="label">A tua ideia</div><p class="idea">Que trabalho do teu negócio queres entregar ao Work?</p></div>
+      <label class="label" for="myidea">Escreve numa frase</label>
+      <textarea id="myidea" placeholder="Por exemplo: responder às reclamações da semana"></textarea>
+      <div class="yncheck">${CRIT.map((c, k) => `<div class="ynrow"><span>${k + 1}. ${c}</span><span class="ynbtns"><button class="yn" id="y${k}" data-k="${k}" data-v="1" aria-pressed="false">SIM</button><button class="yn no" id="n${k}" data-k="${k}" data-v="0" aria-pressed="false">NÃO</button></span></div>`).join("")}</div>
+      <button class="btn" id="judge" disabled>Ver o veredicto</button>
+      <div id="mine" aria-live="polite"></div>
+      <button class="btn ghost" id="back">Voltar ao resultado</button>
+    </section>`;
+  stage.querySelectorAll(".yn").forEach(b => b.addEventListener("click", () => {
+    const k = +b.dataset.k; yn[k] = b.dataset.v === "1";
+    document.getElementById("y" + k).setAttribute("aria-pressed", yn[k] === true);
+    document.getElementById("n" + k).setAttribute("aria-pressed", yn[k] === false);
+    document.getElementById("judge").disabled = yn.some(x => x === null);
+    document.getElementById("mine").innerHTML = "";
+  }));
+  document.getElementById("judge").addEventListener("click", () => {
+    const f = yn.findIndex(x => x === false);
+    const idea = document.getElementById("myidea").value.trim();
+    const tips = [
+      "Escolhe uma parte que volte todas as semanas. Um trabalho raro fica melhor no Chat.",
+      "Diz o que tem de estar pronto no fim: uma tabela, uma lista, rascunhos. Se não sabes, estreita.",
+      "Com um passo só, basta um pedido no Chat. Junta as etapas à volta: antes e depois.",
+      "Tira o envio do fluxo. Deixa tudo em rascunho e aprova tu antes de sair.",
+      "Troca a fonte por uma que tenhas à mão: uma folha, um extracto, as tuas encomendas."
+    ];
+    document.getElementById("mine").innerHTML = f === -1
+      ? `<div class="mine"><b>Bom para começar.</b><p>${idea ? "“" + esc(idea) + "” passa" : "Passa"} nos cinco. É esta ideia que vai para o teu Plano de Fluxo.</p></div>`
+      : `<div class="mine bad"><b>Pára no critério ${f + 1}.</b><p>${esc(tips[f])}</p></div>`;
+  });
+  document.getElementById("back").addEventListener("click", () => { end(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+}
+
+show();
+</script>
+</body>
+</html>
