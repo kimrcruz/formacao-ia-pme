@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Monta o pedido</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+.back{display:inline-block;font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#1B3A2D;text-decoration:none;border-bottom:1.5px solid #8AA08D;padding-bottom:3px;margin-bottom:6px}
+
+  :root {
+    --cream: #F4EFE4;
+    --paper: #FBF8F1;
+    --forest: #1B3A2D;
+    --sage: #8AA08D;
+    --ink: #262626;
+    --soft: #E9E2D2;
+    --red: #A4452F;
+    --muted: #5E6B61;
+    --tT: #D3DDD0;
+    --tC: #E6DCC2;
+    --tE: #C2D0C4;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 20px 32px; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 34px; line-height: 1.1; color: var(--forest); margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 6px 0 0; }
+
+  .progress { display: flex; align-items: center; gap: 10px; }
+  .bars { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .bars i { height: 6px; background: var(--soft); border: 1px solid var(--sage); }
+  .bars i.done { background: var(--forest); border-color: var(--forest); }
+  .bars i.now { border-color: var(--forest); border-width: 2px; }
+  .count { font-size: 13px; font-weight: 700; color: var(--forest); white-space: nowrap; }
+
+  .card { background: var(--paper); border: 1px solid var(--sage); padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .situ { font-family: var(--serif); font-size: 20px; line-height: 1.3; color: var(--forest); margin: 4px 0 0; }
+
+  .frag { border: 1px solid var(--sage); background: var(--cream); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .frag.right { border-color: var(--forest); }
+  .frag.wrong { border-color: var(--red); border-width: 1.5px; }
+  .frag q { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.4; color: var(--forest); quotes: "\201C" "\201D"; }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .opt { font: 700 13px/1 var(--sans); letter-spacing: .06em; min-height: 40px; padding: 8px 4px; background: var(--paper); color: var(--forest); border: 1.5px solid var(--forest); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .opt[aria-pressed="true"] { background: var(--forest); color: var(--cream); }
+  .opt.fora { border-style: dashed; }
+  .opt:disabled { cursor: default; opacity: .4; }
+  .opt[aria-pressed="true"]:disabled { opacity: 1; }
+  .frag.wrong .opt[aria-pressed="true"] { background: var(--red); border-color: var(--red); }
+  .opt:focus-visible, .btn:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .res { font-size: 14px; margin: 0; }
+  .res b { letter-spacing: .06em; }
+  .frag.right .res b { color: var(--forest); }
+  .frag.wrong .res b { color: var(--red); }
+
+  .btn { font: 700 17px/1 var(--sans); padding: 16px; min-height: 54px; width: 100%; background: var(--forest); color: var(--cream); border: 0; cursor: pointer; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; text-align: center; }
+
+  .assembled { border-top: 1px solid var(--sage); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .verdict { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--forest); margin: 0; }
+  .prompt { font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.7; color: var(--forest); margin: 0; }
+  .prompt mark { color: inherit; padding: 1px 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .mT { background: var(--tT); } .mC { background: var(--tC); } .mE { background: var(--tE); }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--forest); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 14px; height: 14px; border: 1px solid var(--sage); display: inline-block; }
+  .out { font-size: 14px; color: var(--muted); margin: 0; }
+  .out s { color: var(--red); }
+
+  .score { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--forest); margin: 0; font-variant-numeric: tabular-nums; }
+  .score small { font-size: 24px; color: var(--muted); }
+  .end-msg { font-family: var(--serif); font-size: 20px; color: var(--forest); margin: 0; }
+  .recap { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--sage); }
+  .recap li { display: flex; justify-content: space-between; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--sage); font-size: 15px; }
+  .recap b { font-variant-numeric: tabular-nums; color: var(--forest); }
+
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .assembled, .card.end { animation: in .25s ease-out; }
+    @keyframes in { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Todos os exercícios</a>
+  <header>
+    <div class="kicker">IA Lab · Lição 1 · Pedir melhor</div>
+    <h1>Monta o pedido</h1>
+    <p class="lead">Três pedidos da Pastelaria Acácia, partidos em bocados. Diz a que bloco pertence cada bocado. Alguns não devem entrar no pedido: esses vão para Fora.</p>
+  </header>
+
+  <div class="progress">
+    <div class="bars" id="bars"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <main id="stage"></main>
+
+  <footer>A Pastelaria Acácia é um negócio fictício. Esta página não guarda as tuas respostas.</footer>
+</div>
+
+<script>
+// Cada ronda: situação e bocados (mostrados já baralhados). k = T, C, E ou F (fora).
+const R = [
+  { situ: "Uma cliente reclamou de um atraso na entrega.",
+    frags: [
+      { t: "A entrega chegou às 13h.", k: "C", why: "A hora real. Sem ela, ele não sabe o tamanho do atraso." },
+      { t: "Não prometas reembolso nem prazo.", k: "E", why: "Um limite: o que ele não pode fazer." },
+      { t: "Responde a esta reclamação que chegou pelo WhatsApp.", k: "T", why: "Diz o que fazer: responder." },
+      { t: "A cliente encomendou um bolo para uma festa no sábado às 10h.", k: "C", why: "A hora combinada, que ele não pode adivinhar." },
+      { t: "Até cinco linhas, tom cordial.", k: "E", why: "O tamanho e o tom da resposta." },
+      { t: "Ainda estamos a confirmar com o motorista o que falhou.", k: "C", why: "Diz o que ainda não sabes. Assim ele não inventa uma causa." }
+    ] },
+  { situ: "Promoção de fim de ano para empresas.",
+    frags: [
+      { t: "É para empresas em Maputo que já nos encomendaram este ano.", k: "C", why: "Para quem é a mensagem." },
+      { t: "Não inventes preços.", k: "E", why: "Um limite que te protege de um preço inventado." },
+      { t: "A lista com o nome e o telefone de cada cliente.", k: "F", why: "Fica de fora. Para escrever a mensagem ele não precisa dos contactos, e dados reais de clientes não se partilham." },
+      { t: "Escreve uma mensagem de WhatsApp com a promoção de fim de ano.", k: "T", why: "Diz o que fazer: escrever a mensagem." },
+      { t: "Até quatro linhas, com a data limite no fim.", k: "E", why: "O tamanho e onde fica a data." },
+      { t: "As encomendas fecham a 15 de Dezembro.", k: "C", why: "A data limite. Se não a deres, ele escolhe uma." }
+    ] },
+  { situ: "Fecho semanal dos pagamentos M-Pesa.",
+    frags: [
+      { t: "Devolve uma tabela: pago, por confirmar, sem pagamento.", k: "E", why: "O formato do resultado." },
+      { t: "O extracto da semana de 19 a 22 de Outubro vai em anexo.", k: "C", why: "Onde está o extracto e que semana cobre." },
+      { t: "O PIN da conta M-Pesa.", k: "F", why: "Nunca se partilha. Um PIN não ajuda a conferir nada e dá acesso ao dinheiro." },
+      { t: "Compara os comprovativos com o extracto M-Pesa.", k: "T", why: "Diz o que fazer: comparar." },
+      { t: "Marca à parte as linhas que não batem certo.", k: "E", why: "O que tem de ficar à vista para tu decidires." },
+      { t: "Os comprovativos são as capturas que colo a seguir.", k: "C", why: "Onde estão os comprovativos." }
+    ] }
+];
+const OPTS = [["T", "Tarefa"], ["C", "Contexto"], ["E", "Expectativa"], ["F", "Fora"]];
+const NAME = Object.fromEntries(OPTS);
+
+let r = 0, pick = [], scores = [];
+const stage = document.getElementById("stage");
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function drawBars() {
+  document.getElementById("bars").innerHTML = R.map((_, k) => `<i class="${k < scores.length ? "done" : k === r ? "now" : ""}"></i>`).join("");
+  document.getElementById("count").textContent = `Pedido ${Math.min(r + 1, R.length)} de ${R.length}`;
+}
+
+function show() {
+  drawBars();
+  const q = R[r];
+  pick = q.frags.map(() => null);
+  stage.innerHTML = `
+    <section class="card">
+      <div>
+        <div class="label">Pedido ${r + 1}</div>
+        <p class="situ">${esc(q.situ)}</p>
+      </div>
+      ${q.frags.map((f, j) => `
+        <div class="frag" id="f${j}">
+          <q>${esc(f.t)}</q>
+          <div class="opts" role="group" aria-label="Bloco">
+            ${OPTS.map(([k, n]) => `<button class="opt ${k === "F" ? "fora" : ""}" id="o${j}${k}" data-j="${j}" data-k="${k}" aria-pressed="false">${n.toUpperCase()}</button>`).join("")}
+          </div>
+          <p class="res" id="r${j}" hidden></p>
+        </div>`).join("")}
+      <button class="btn" id="check" disabled>Verificar</button>
+      <p class="hint" id="left">Faltam ${q.frags.length} bocados.</p>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    const j = +b.dataset.j;
+    pick[j] = b.dataset.k;
+    OPTS.forEach(([k]) => document.getElementById("o" + j + k).setAttribute("aria-pressed", pick[j] === k));
+    const n = pick.filter(x => x === null).length;
+    document.getElementById("check").disabled = n > 0;
+    document.getElementById("left").textContent = n ? `Faltam ${n} ${n === 1 ? "bocado" : "bocados"}.` : "Tudo arrumado. Carrega em Verificar.";
+  }));
+  document.getElementById("check").addEventListener("click", check);
+}
+
+function check() {
+  const q = R[r];
+  let ok = 0;
+  q.frags.forEach((f, j) => {
+    const right = pick[j] === f.k;
+    if (right) ok++;
+    document.getElementById("f" + j).classList.add(right ? "right" : "wrong");
+    const res = document.getElementById("r" + j);
+    res.hidden = false;
+    res.innerHTML = `<b>${right ? "Certo" : NAME[f.k]}.</b> ${esc(f.why)}`;
+  });
+  stage.querySelectorAll(".opt").forEach(b => b.disabled = true);
+  document.getElementById("check").hidden = true;
+  document.getElementById("left").hidden = true;
+  scores[r] = ok;
+
+  const inOrder = ["T", "C", "E"].flatMap(k => q.frags.filter(f => f.k === k));
+  const out = q.frags.filter(f => f.k === "F");
+  const last = r === R.length - 1;
+  document.getElementById("fb").innerHTML = `
+    <div class="assembled">
+      <p class="verdict">${ok} de ${q.frags.length} no sítio certo.</p>
+      <div class="label">O pedido montado</div>
+      <p class="prompt">${inOrder.map(f => `<mark class="m${f.k}">${esc(f.t)}</mark>`).join(" ")}</p>
+      <div class="legend"><span><i class="mT"></i>TAREFA</span><span><i class="mC"></i>CONTEXTO</span><span><i class="mE"></i>EXPECTATIVA</span></div>
+      ${out.length ? `<p class="out">Ficou de fora: <s>${out.map(f => esc(f.t)).join(" ")}</s></p>` : ""}
+      <button class="btn" id="next">${last ? "Ver o resultado" : "Seguinte"}</button>
+    </div>`;
+  drawBars();
+  const next = document.getElementById("next");
+  next.addEventListener("click", () => { r++; r < R.length ? show() : end(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  document.getElementById("fb").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function end() {
+  drawBars();
+  document.getElementById("count").textContent = "Terminado";
+  const total = R.reduce((a, q) => a + q.frags.length, 0);
+  const score = scores.reduce((a, b) => a + b, 0);
+  const msg = score === total ? "Tudo no sítio. Já sabes montar um pedido bloco a bloco."
+    : score >= total - 3 ? "Bom resultado. As trocas mais comuns são entre Contexto e Expectativa: o que ele precisa de saber e como deve ficar."
+    : "Volta ao slide do pedido completo e tenta outra vez. Tarefa diz o que fazer, Contexto o que saber, Expectativa como deve ficar.";
+  stage.innerHTML = `
+    <section class="card end">
+      <div>
+        <div class="label">O teu resultado</div>
+        <p class="score">${score}<small> / ${total}</small></p>
+      </div>
+      <p class="end-msg">${msg}</p>
+      <ul class="recap">${R.map((q, k) => `<li><span>${esc(q.situ)}</span><b>${scores[k]}/${q.frags.length}</b></li>`).join("")}</ul>
+      <button class="btn ghost" id="again">Fazer outra vez</button>
+    </section>`;
+  document.getElementById("again").addEventListener("click", () => { r = 0; scores = []; show(); window.scrollTo({ top: 0 }); });
+}
+
+show();
+</script>
+</body>
+</html>

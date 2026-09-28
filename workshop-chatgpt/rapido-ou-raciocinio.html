@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Rápido ou raciocínio?</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+.back{display:inline-block;font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#1B3A2D;text-decoration:none;border-bottom:1.5px solid #8AA08D;padding-bottom:3px;margin-bottom:6px}
+
+  :root {
+    --cream: #F4EFE4;
+    --paper: #FBF8F1;
+    --forest: #1B3A2D;
+    --sage: #8AA08D;
+    --ink: #262626;
+    --soft: #E9E2D2;
+    --red: #A4452F;
+    --muted: #5E6B61;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 20px 32px; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 34px; line-height: 1.1; color: var(--forest); margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 6px 0 0; }
+
+  .rule { border: 1px solid var(--sage); background: var(--soft); padding: 12px 14px; display: grid; gap: 8px; font-size: 14px; }
+  .rule div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: start; }
+  .rule b { font-size: 12px; letter-spacing: .08em; color: var(--forest); padding-top: 1px; }
+
+  .progress { display: flex; align-items: center; gap: 10px; }
+  .bars { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+  .bars i { height: 6px; background: var(--soft); border: 1px solid var(--sage); }
+  .bars i.ok { background: var(--forest); border-color: var(--forest); }
+  .bars i.ko { background: var(--red); border-color: var(--red); }
+  .bars i.now { border-color: var(--forest); border-width: 2px; }
+  .count { font-size: 13px; font-weight: 700; color: var(--forest); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .card { background: var(--paper); border: 1px solid var(--sage); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .task { font-family: var(--serif); font-size: 21px; line-height: 1.35; color: var(--forest); margin: 6px 0 0; }
+
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice { font: 700 15px/1.2 var(--sans); letter-spacing: .06em; padding: 14px 8px; min-height: 64px; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 1.5px solid var(--forest); }
+  .choice.fast { background: var(--cream); color: var(--forest); }
+  .choice.slow { background: var(--forest); color: var(--cream); }
+  .choice:focus-visible, .btn:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .choice:disabled { cursor: default; opacity: .35; }
+  .choice.picked { opacity: 1; outline: 3px solid var(--forest); outline-offset: 2px; }
+  .choice.picked.wrong { outline-color: var(--red); }
+  .choice.answer { opacity: 1; }
+
+  .feedback { border-top: 1px solid var(--sage); padding-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .verdict { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--forest); margin: 0; }
+  .verdict.wrong { color: var(--red); }
+  .path { display: flex; flex-direction: column; gap: 6px; }
+  .step { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--sage); padding: 8px 10px; font-size: 14px; }
+  .step b { font-size: 12px; letter-spacing: .08em; padding: 3px 8px; border: 1px solid var(--forest); color: var(--forest); background: var(--cream); }
+  .step b.yes { background: var(--forest); color: var(--cream); }
+  .end-box { font-weight: 700; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; text-align: center; }
+  .end-box.fast { border: 1.5px solid var(--forest); color: var(--forest); }
+  .end-box.slow { background: var(--forest); color: var(--cream); }
+  .why { margin: 0; }
+  .example { border-left: 3px solid var(--forest); padding: 6px 0 6px 12px; }
+  .example .label { color: var(--forest); }
+  .example p { font-family: var(--serif); font-style: italic; color: var(--forest); margin: 4px 0 0; }
+
+  .btn { font: 700 17px/1 var(--sans); padding: 16px; min-height: 54px; width: 100%; background: var(--forest); color: var(--cream); border: 0; cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+
+  .score { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--forest); margin: 0; font-variant-numeric: tabular-nums; }
+  .score small { font-size: 24px; color: var(--muted); }
+  .end-msg { font-family: var(--serif); font-size: 20px; color: var(--forest); margin: 0; }
+  .recap { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--sage); }
+  .recap li { display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--sage); font-size: 14px; align-items: start; }
+  .recap .n { font-family: var(--serif); font-weight: 700; color: var(--sage); }
+  .recap .a { font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .recap .a.ok { color: var(--forest); }
+  .recap .a.ko { color: var(--red); }
+
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .feedback, .card.end { animation: in .25s ease-out; }
+    @keyframes in { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Todos os exercícios</a>
+  <header>
+    <div class="kicker">IA Lab · Lição 3 · Work</div>
+    <h1>Rápido ou raciocínio?</h1>
+    <p class="lead">Oito tarefas da Pastelaria Acácia. Para cada uma, escolhe o modelo que usarias.</p>
+  </header>
+
+  <section class="rule" aria-label="A regra">
+    <div><b>RÁPIDO</b><span>Tarefa curta e de baixo risco: reescrever, resumir, traduzir, dar ideias.</span></div>
+    <div><b>RACIOCÍNIO</b><span>Várias etapas ou restrições, comparar opções, tomar uma decisão ou conferir contra critérios.</span></div>
+  </section>
+
+  <div class="progress">
+    <div class="bars" id="bars"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <main id="stage"></main>
+
+  <footer>A Pastelaria Acácia é um negócio fictício. Esta página não guarda as tuas respostas.</footer>
+</div>
+
+<script>
+// a: "r" rápido, "x" raciocínio. q1: rápida e de baixo risco? q2: etapas/restrições/opções/decisão?
+const Q = [
+  { t: "Um título curto para o post de sexta.", a: "r", q1: true,
+    why: "É curta e, se o título não prestar, pedes outro. Não há decisão nem risco." },
+  { t: "Comparar três fornecedores de farinha por preço, prazo e fiabilidade, e recomendar um.", a: "x", q1: false, q2: true,
+    why: "Tem três critérios, três opções e uma decisão no fim. É o caso típico do raciocínio.",
+    ex: "Compara os três fornecedores nestes três critérios. Mostra a tabela e explica a recomendação." },
+  { t: "Corrigir os erros desta mensagem.", a: "r", q1: true,
+    why: "Tarefa curta, e o resultado confere-se a ler." },
+  { t: "Planear a produção de sábado com 40 encomendas e dois fornos.", a: "x", q1: false, q2: true,
+    why: "Tem restrições (fornos, horas de entrega) e etapas que dependem umas das outras.",
+    ex: "Faz o plano hora a hora. Diz-me que encomendas ficam em risco se um forno falhar." },
+  { t: "Traduzir para inglês a mensagem de boas-vindas a um cliente estrangeiro.", a: "r", q1: true,
+    why: "Tradução curta de uma mensagem que tu lês antes de enviar." },
+  { t: "Conferir cinco comprovativos contra o extracto M-Pesa e explicar cada linha que não bate.", a: "x", q1: false, q2: true,
+    why: "Conferir contra critérios, linha a linha, com excepções escondidas. Um erro aqui é dinheiro.",
+    ex: "Compara os comprovativos com o extracto. Explica cada linha que não bate e diz o que precisas de mim para decidir." },
+  { t: "Dar cinco ideias de sabores para o Dia da Família.", a: "r", q1: true,
+    why: "São ideias. Não há resposta certa para conferir, e escolher é contigo." },
+  { t: "Decidir se vale a pena abrir ao domingo, com as vendas dos últimos três meses e o custo de um funcionário a mais.", a: "x", q1: false, q2: true,
+    why: "Tem números para cruzar, um custo, e uma decisão que mexe com o negócio.",
+    ex: "Com estas vendas e este custo, diz se o domingo se paga. Mostra as contas e o que assumiste." }
+];
+const NAME = { r: "rápido", x: "raciocínio" };
+
+let i = 0, answers = [];
+const stage = document.getElementById("stage");
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function drawBars() {
+  document.getElementById("bars").innerHTML = Q.map((q, k) => {
+    let c = "";
+    if (answers[k] !== undefined) c = answers[k] === q.a ? "ok" : "ko";
+    else if (k === i) c = "now";
+    return `<i class="${c}"></i>`;
+  }).join("");
+  document.getElementById("count").textContent = `${Math.min(i + 1, Q.length)} de ${Q.length}`;
+}
+
+function show() {
+  drawBars();
+  const q = Q[i];
+  stage.innerHTML = `
+    <section class="card">
+      <div>
+        <div class="label">Tarefa ${String.fromCharCode(65 + i)}</div>
+        <p class="task">${esc(q.t)}</p>
+      </div>
+      <div class="choices">
+        <button class="choice fast" id="c-r" data-a="r">RÁPIDO</button>
+        <button class="choice slow" id="c-x" data-a="x">RACIOCÍNIO</button>
+      </div>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => answer(b.dataset.a)));
+}
+
+function answer(a) {
+  const q = Q[i];
+  const right = a === q.a;
+  answers[i] = a;
+  stage.querySelectorAll(".choice").forEach(b => b.disabled = true);
+  const b = document.getElementById("c-" + a);
+  b.classList.add("picked");
+  if (!right) { b.classList.add("wrong"); document.getElementById("c-" + q.a).classList.add("answer"); }
+  const path = q.q1
+    ? `<div class="step"><span>É rápida e de baixo risco?</span><b class="yes">SIM</b></div><div class="end-box fast">Modelo rápido</div>`
+    : `<div class="step"><span>É rápida e de baixo risco?</span><b>NÃO</b></div>
+       <div class="step"><span>Tem etapas, restrições, opções ou uma decisão?</span><b class="yes">SIM</b></div>
+       <div class="end-box slow">Modelo de raciocínio</div>`;
+  const last = i === Q.length - 1;
+  document.getElementById("fb").innerHTML = `
+    <div class="feedback">
+      <p class="verdict ${right ? "" : "wrong"}">${right ? "Certo." : "Esta é para o " + NAME[q.a] + "."}</p>
+      <div class="path">${path}</div>
+      <p class="why">${esc(q.why)}</p>
+      ${q.ex ? `<div class="example"><div class="label">Como pedirias</div><p>“${esc(q.ex)}”</p></div>` : ""}
+      <button class="btn" id="next">${last ? "Ver o resultado" : "Seguinte"}</button>
+    </div>`;
+  drawBars();
+  const next = document.getElementById("next");
+  next.addEventListener("click", () => { i++; i < Q.length ? show() : end(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  next.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function end() {
+  drawBars();
+  document.getElementById("count").textContent = "Terminado";
+  const score = answers.filter((a, k) => a === Q[k].a).length;
+  const msg = score === Q.length ? "Todas certas. E se tiveres dúvida, começa pelo rápido e muda se o resultado não servir."
+    : score >= 6 ? "Bom resultado. Na dúvida, começa pelo rápido. Se o resultado não servir, muda para o raciocínio."
+    : "Volta às duas perguntas: é rápida e de baixo risco? Tem etapas, opções ou uma decisão?";
+  stage.innerHTML = `
+    <section class="card end">
+      <div>
+        <div class="label">O teu resultado</div>
+        <p class="score">${score}<small> / ${Q.length}</small></p>
+      </div>
+      <p class="end-msg">${msg}</p>
+      <ul class="recap">${Q.map((q, k) => `<li><span class="n">${String.fromCharCode(65 + k)}</span><span>${esc(q.t.length > 70 ? q.t.slice(0, 68).trim() + "…" : q.t)}</span><span class="a ${answers[k] === q.a ? "ok" : "ko"}">${q.a === "r" ? "Rápido" : "Raciocínio"}</span></li>`).join("")}</ul>
+      <button class="btn ghost" id="again">Fazer outra vez</button>
+    </section>`;
+  document.getElementById("again").addEventListener("click", () => { i = 0; answers = []; show(); window.scrollTo({ top: 0 }); });
+}
+
+show();
+</script>
+</body>
+</html>

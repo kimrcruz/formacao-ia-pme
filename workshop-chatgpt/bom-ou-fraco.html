@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Bom ou fraco?</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+.back{display:inline-block;font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#1B3A2D;text-decoration:none;border-bottom:1.5px solid #8AA08D;padding-bottom:3px;margin-bottom:6px}
+
+  :root {
+    --cream: #F4EFE4;
+    --paper: #FBF8F1;
+    --forest: #1B3A2D;
+    --sage: #8AA08D;
+    --ink: #262626;
+    --soft: #E9E2D2;
+    --red: #A4452F;
+    --muted: #5E6B61;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 20px 32px; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 34px; line-height: 1.1; color: var(--forest); margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 6px 0 0; color: var(--ink); }
+  .tce { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tce span { font-size: 12px; font-weight: 700; letter-spacing: .1em; border: 1px solid var(--sage); padding: 3px 8px; color: var(--forest); }
+
+  .progress { display: flex; align-items: center; gap: 10px; }
+  .bars { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+  .bars i { height: 6px; background: var(--soft); border: 1px solid var(--sage); }
+  .bars i.ok { background: var(--forest); border-color: var(--forest); }
+  .bars i.ko { background: var(--red); border-color: var(--red); }
+  .bars i.now { border-color: var(--forest); border-width: 2px; }
+  .count { font-size: 13px; font-weight: 700; color: var(--forest); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .card { background: var(--paper); border: 1px solid var(--sage); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .prompt { font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1.4; color: var(--forest); margin: 6px 0 0; }
+
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice { font: 700 18px/1 var(--sans); padding: 16px 10px; min-height: 56px; background: var(--cream); color: var(--forest); border: 1.5px solid var(--forest); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .choice:focus-visible, .btn:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .choice:disabled { cursor: default; opacity: .45; }
+  .choice.picked { opacity: 1; background: var(--forest); color: var(--cream); }
+  .choice.picked.wrong { background: var(--red); border-color: var(--red); }
+
+  .feedback { border-top: 1px solid var(--sage); padding-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .verdict { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--forest); margin: 0; }
+  .verdict.wrong { color: var(--red); }
+  .blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .block { border: 1px solid var(--sage); padding: 8px 6px; text-align: center; }
+  .block b { display: block; font-size: 11px; letter-spacing: .12em; color: var(--forest); }
+  .block span { display: block; font-size: 14px; margin-top: 2px; }
+  .block.tem { background: var(--forest); border-color: var(--forest); }
+  .block.tem b, .block.tem span { color: var(--cream); }
+  .block.falta { border-color: var(--red); }
+  .block.falta span { color: var(--red); font-weight: 700; }
+  .block.vago span { color: var(--muted); font-style: italic; }
+  .why { margin: 0; }
+
+  .btn { font: 700 17px/1 var(--sans); padding: 16px; min-height: 54px; width: 100%; background: var(--forest); color: var(--cream); border: 0; cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+  .btn-row { display: grid; gap: 10px; }
+
+  .score { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--forest); margin: 0; font-variant-numeric: tabular-nums; }
+  .score small { font-size: 24px; color: var(--muted); }
+  .end-msg { font-family: var(--serif); font-size: 20px; color: var(--forest); margin: 0; }
+  .recap { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--sage); }
+  .recap li { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--sage); font-size: 14px; align-items: start; }
+  .recap .n { font-family: var(--serif); font-weight: 700; color: var(--sage); }
+  .recap .a { font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .recap .a.ok { color: var(--forest); }
+  .recap .a.ko { color: var(--red); }
+  .share { display: flex; flex-direction: column; gap: 8px; }
+  .share code { font-family: var(--sans); background: var(--soft); padding: 10px 12px; font-size: 15px; user-select: all; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; }
+
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .feedback, .card.end { animation: in .25s ease-out; }
+    @keyframes in { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Todos os exercícios</a>
+  <header>
+    <div class="kicker">IA Lab · Lição 1 · Pedir melhor</div>
+    <h1>Bom ou fraco?</h1>
+    <p class="lead">Oito pedidos que a Pastelaria Acácia escreveu ao ChatGPT. Lê cada um e decide se é bom ou fraco. Pensa nos três blocos:</p>
+    <div class="tce" aria-hidden="true"><span>TAREFA</span><span>CONTEXTO</span><span>EXPECTATIVA</span></div>
+  </header>
+
+  <div class="progress">
+    <div class="bars" id="bars"></div>
+    <div class="count" id="count">1 de 8</div>
+  </div>
+
+  <main id="stage"></main>
+
+  <footer>A Pastelaria Acácia é um negócio fictício. Esta página não guarda as tuas respostas.</footer>
+</div>
+
+<script>
+const Q = [
+  { p: "Escreve uma mensagem para os clientes.", good: false,
+    tce: ["vago", "falta", "falta"],
+    why: "Ele não sabe que mensagem, para que clientes nem com que objectivo. Vai escrever algo genérico que depois tens de refazer." },
+  { p: "Responde a uma reclamação de uma cliente. O bolo era para as 10h e chegou às 13h. Tom cordial, até cinco linhas, para enviar pelo WhatsApp. Pede o número da encomenda. Não prometas reembolso.", good: true,
+    tce: ["tem", "tem", "tem"],
+    why: "Tem os três blocos. A tarefa é clara, o contexto diz o que aconteceu e a expectativa põe limites: cinco linhas, WhatsApp, sem reembolso." },
+  { p: "Dá-me ideias de promoções.", good: false,
+    tce: ["tem", "falta", "falta"],
+    why: "Ele não sabe que és uma pastelaria em Maputo, para quando é a promoção nem a quem se dirige. As ideias vão servir a qualquer negócio." },
+  { p: "Quanto cobra a Pastelaria Acácia por um bolo de chocolate para 30 pessoas?", good: false,
+    tce: ["tem", "falta", "falta"],
+    why: "Pede um preço que ninguém lhe deu. Ele responde com um valor em meticais que parece certo e foi inventado. Cola a tabela de preços no pedido e ele passa a ter de onde tirar o valor." },
+  { p: "Escreve uma mensagem de WhatsApp para empresas em Maputo com a promoção de bolos de fim de ano. Encomendas até 15 de Dezembro. Até quatro linhas. Não inventes preços.", good: true,
+    tce: ["tem", "tem", "tem"],
+    why: "Diz a quem se dirige, a data limite, o canal e o tamanho. A última frase protege-te de um preço inventado." },
+  { p: "Faz um post bonito sobre bolos para o Instagram, com emojis e hashtags. O melhor possível.", good: false,
+    tce: ["tem", "falta", "vago"],
+    why: "Parece detalhado. “Bonito” e “o melhor possível” não dizem nada que ele consiga cumprir. Falta saber que bolo, para quem e para quê." },
+  { p: "Resume em três pontos estas notas da reunião com o fornecedor de farinha. Marca o que ainda falta confirmar. [notas coladas aqui]", good: true,
+    tce: ["tem", "tem", "tem"],
+    why: "O contexto vai colado no pedido, por isso ele não adivinha. E pede-lhe que mostre as lacunas, que são o que tu tens de verificar a seguir." },
+  { p: "Um cliente quer um bolo para um casamento. Antes de escreveres o orçamento, faz-me três perguntas, uma de cada vez, sobre o que precisas de saber.", good: true,
+    tce: ["tem", "tem", "tem"],
+    why: "Quando ainda não tens a informação toda, pedir-lhe que te entreviste é um bom pedido. Ele pergunta, tu respondes, e o orçamento sai com dados teus." }
+];
+const NAMES = ["Tarefa", "Contexto", "Expectativa"];
+const STATE_TXT = { tem: "tem", falta: "falta", vago: "vago" };
+
+let i = 0, answers = [];
+const stage = document.getElementById("stage");
+const bars = document.getElementById("bars");
+const count = document.getElementById("count");
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+function drawBars() {
+  bars.innerHTML = Q.map((_, k) => {
+    let c = "";
+    if (answers[k] !== undefined) c = answers[k] === Q[k].good ? "ok" : "ko";
+    else if (k === i) c = "now";
+    return `<i class="${c}"></i>`;
+  }).join("");
+  count.textContent = i < Q.length ? `${i + 1} de ${Q.length}` : `${Q.length} de ${Q.length}`;
+}
+
+function show() {
+  drawBars();
+  const q = Q[i];
+  stage.innerHTML = `
+    <section class="card" aria-labelledby="lbl">
+      <div>
+        <div class="label" id="lbl">Pedido ${i + 1}</div>
+        <p class="prompt">“${esc(q.p)}”</p>
+      </div>
+      <div class="choices">
+        <button class="choice" id="c-fraco" data-v="0">Fraco</button>
+        <button class="choice" id="c-bom" data-v="1">Bom</button>
+      </div>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => answer(b.dataset.v === "1", b)));
+}
+
+function answer(v, btn) {
+  const q = Q[i];
+  const right = v === q.good;
+  answers[i] = v;
+  stage.querySelectorAll(".choice").forEach(b => b.disabled = true);
+  btn.classList.add("picked");
+  if (!right) btn.classList.add("wrong");
+  const verdict = right
+    ? `Certo. É ${q.good ? "bom" : "fraco"}.`
+    : `Este é ${q.good ? "bom" : "fraco"}.`;
+  const last = i === Q.length - 1;
+  document.getElementById("fb").innerHTML = `
+    <div class="feedback">
+      <p class="verdict ${right ? "" : "wrong"}">${verdict}</p>
+      <div class="blocks">${q.tce.map((s, k) => `<div class="block ${s}"><b>${NAMES[k].toUpperCase()}</b><span>${STATE_TXT[s]}</span></div>`).join("")}</div>
+      <p class="why">${esc(q.why)}</p>
+      <button class="btn" id="next">${last ? "Ver o resultado" : "Seguinte"}</button>
+    </div>`;
+  drawBars();
+  const next = document.getElementById("next");
+  next.addEventListener("click", () => { i++; i < Q.length ? show() : end(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  next.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function end() {
+  drawBars();
+  const score = answers.filter((v, k) => v === Q[k].good).length;
+  const msg = score === Q.length ? "Oito em oito. Já sabes o que procurar num pedido."
+    : score >= 6 ? "Bom resultado. Relê os que falhaste antes de preencheres a tua Ficha TCE."
+    : "Volta aos três blocos: Tarefa, Contexto e Expectativa. Depois tenta outra vez.";
+  stage.innerHTML = `
+    <section class="card end">
+      <div>
+        <div class="label">O teu resultado</div>
+        <p class="score">${score}<small> / ${Q.length}</small></p>
+      </div>
+      <p class="end-msg">${msg}</p>
+      <ul class="recap">${Q.map((q, k) => {
+        const ok = answers[k] === q.good;
+        return `<li><span class="n">${k + 1}</span><span>${esc(q.p.length > 70 ? q.p.slice(0, 68).trim() + "…" : q.p)}</span><span class="a ${ok ? "ok" : "ko"}">${q.good ? "Bom" : "Fraco"}</span></li>`;
+      }).join("")}</ul>
+      <button class="btn ghost" id="again">Fazer outra vez</button>
+    </section>`;
+  document.getElementById("again").addEventListener("click", () => { i = 0; answers = []; show(); window.scrollTo({ top: 0 }); });
+}
+
+show();
+</script>
+</body>
+</html>

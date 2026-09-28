@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Exercícios IA Lab</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root {
+    --cream: #F4EFE4; --paper: #FBF8F1; --forest: #1B3A2D; --sage: #8AA08D;
+    --ink: #262626; --soft: #E9E2D2; --muted: #5E6B61;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 24px 36px; -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  .mark { font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 30px; color: var(--forest); line-height: 1; }
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 32px; line-height: 1.1; color: var(--forest); margin: 6px 0 0; text-wrap: balance; }
+  .lead { margin: 8px 0 0; }
+  section { display: flex; flex-direction: column; gap: 8px; }
+  h2 { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--sage); }
+  a.ex { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; text-decoration: none; color: var(--ink); background: var(--paper); border: 1px solid var(--sage); padding: 14px; min-height: 64px; }
+  a.ex:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  a.ex:active { background: var(--soft); }
+  .n { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--sage); }
+  .t { display: flex; flex-direction: column; }
+  .t b { font-family: var(--serif); font-size: 19px; color: var(--forest); line-height: 1.2; }
+  .t span { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .go { font-family: var(--serif); font-size: 26px; color: var(--forest); }
+  .soon { opacity: .55; }
+  .soon .go { font: 700 11px/1 var(--sans); letter-spacing: .1em; color: var(--muted); }
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">ia</div>
+    <div class="kicker" style="margin-top:14px">IA Lab · Maputo</div>
+    <h1>ChatGPT: primeiros passos na prática</h1>
+    <p class="lead">Exercícios do workshop. Fazem-se no telemóvel, sem conta e sem registo. Depois de a página abrir, funcionam mesmo com a rede fraca.</p>
+  </header>
+
+  <section>
+    <h2>Lição 1 · Pedir melhor</h2>
+    <a class="ex" href="bom-ou-fraco.html"><span class="n">1</span><span class="t"><b>Bom ou fraco?</b><span>Oito pedidos para avaliar</span></span><span class="go">›</span></a>
+    <a class="ex" href="o-que-falta.html"><span class="n">2</span><span class="t"><b>O que falta?</b><span>Tarefa, Contexto ou Expectativa</span></span><span class="go">›</span></a>
+    <a class="ex" href="monta-o-pedido.html"><span class="n">3</span><span class="t"><b>Monta o pedido</b><span>Arruma os bocados nos blocos certos</span></span><span class="go">›</span></a>
+    <a class="ex" href="apanha-a-invencao.html"><span class="n">4</span><span class="t"><b>Apanha a invenção</b><span>O que ele inventou na resposta?</span></span><span class="go">›</span></a>
+  </section>
+
+  <section>
+    <h2>Lição 2 · Pesquisar e comunicar</h2>
+    <a class="ex" href="de-onde-veio.html"><span class="n">5</span><span class="t"><b>De onde veio?</b><span>Conversa, pesquisa ou ficheiro</span></span><span class="go">›</span></a>
+  </section>
+
+  <section>
+    <h2>Lição 3 · Work</h2>
+    <a class="ex" href="rapido-ou-raciocinio.html"><span class="n">6</span><span class="t"><b>Rápido ou raciocínio?</b><span>Que modelo usar em cada tarefa</span></span><span class="go">›</span></a>
+    <a class="ex" href="encontra-as-excepcoes.html"><span class="n">7</span><span class="t"><b>Encontra as excepções</b><span>Comprovativos contra o extracto M-Pesa</span></span><span class="go">›</span></a>
+    <div class="ex soon" style="display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;background:var(--paper);border:1px dashed var(--sage);padding:14px;min-height:64px"><span class="n">8</span><span class="t"><b>Escolhe o primeiro fluxo</b><span>Os cinco critérios do funil</span></span><span class="go">EM BREVE</span></div>
+  </section>
+
+  <footer>Kim Cruz · IA Lab · Os exemplos usam a Pastelaria Acácia, um negócio fictício. As páginas não guardam respostas.</footer>
+</div>
+</body>
+</html>

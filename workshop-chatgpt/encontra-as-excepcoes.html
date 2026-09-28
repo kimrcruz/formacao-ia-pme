@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4EFE4">
+<title>Encontra as excepções</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+.back{display:inline-block;font:700 13px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;color:#1B3A2D;text-decoration:none;border-bottom:1.5px solid #8AA08D;padding-bottom:3px;margin-bottom:6px}
+
+  :root {
+    --cream: #F4EFE4;
+    --paper: #FBF8F1;
+    --forest: #1B3A2D;
+    --sage: #8AA08D;
+    --ink: #262626;
+    --soft: #E9E2D2;
+    --red: #A4452F;
+    --muted: #5E6B61;
+    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --sans: Arial, "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  }
+  html, body { background: var(--cream); color: var(--ink); }
+  body { font-family: var(--sans); font-size: 16px; line-height: 1.5; padding-inline: 16px; padding-block: 20px 32px; }
+  .wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+  h1 { font-family: var(--serif); font-size: 34px; line-height: 1.1; color: var(--forest); margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 6px 0 0; }
+
+  .data { border: 1px solid var(--sage); background: var(--soft); padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .data .label { grid-column: auto; margin-bottom: 4px; color: var(--forest); font-size: 11px; }
+  .data .row { padding: 4px 0; border-bottom: 1px solid var(--sage); display: flex; flex-direction: column; }
+  .data .row b { font-size: 13px; color: var(--forest); }
+  .data .row.out { color: var(--muted); }
+  .data .foot { grid-column: 1 / -1; font-size: 12px; color: var(--muted); margin: 0; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .steps span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-align: center; padding: 6px 2px; border: 1px solid var(--sage); color: var(--muted); }
+  .steps span.now { border: 2px solid var(--forest); color: var(--forest); }
+  .steps span.done { background: var(--forest); border-color: var(--forest); color: var(--cream); }
+
+  .card { background: var(--paper); border: 1px solid var(--sage); padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .q { font-family: var(--serif); font-size: 20px; line-height: 1.3; color: var(--forest); margin: 4px 0 0; }
+
+  .item { border: 1px solid var(--sage); background: var(--cream); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .item.right { border-color: var(--forest); }
+  .item.wrong { border-color: var(--red); border-width: 1.5px; }
+  .item .id { font-weight: 700; color: var(--forest); font-variant-numeric: tabular-nums; }
+  .item .id small { font-weight: 400; color: var(--muted); }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .opt { font: 700 12px/1.15 var(--sans); letter-spacing: .05em; min-height: 42px; padding: 8px 4px; background: var(--paper); color: var(--forest); border: 1.5px solid var(--forest); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .opt.ex { border-color: var(--forest); }
+  .opt[aria-pressed="true"] { background: var(--forest); color: var(--cream); }
+  .opt:disabled { cursor: default; opacity: .4; }
+  .opt[aria-pressed="true"]:disabled { opacity: 1; }
+  .item.wrong .opt[aria-pressed="true"] { background: var(--red); border-color: var(--red); }
+  .opt:focus-visible, .btn:focus-visible, .big:focus-visible { outline: 3px solid var(--sage); outline-offset: 2px; }
+  .res { font-size: 14px; margin: 0; }
+  .item.right .res b { color: var(--forest); }
+  .item.wrong .res b { color: var(--red); }
+
+  .bigs { display: grid; gap: 8px; }
+  .big { text-align: left; font: 16px/1.35 var(--sans); padding: 14px; background: var(--cream); color: var(--ink); border: 1.5px solid var(--forest); cursor: pointer; -webkit-tap-highlight-color: transparent; display: flex; flex-direction: column; gap: 4px; }
+  .big b { font-family: var(--serif); font-size: 20px; color: var(--forest); font-variant-numeric: tabular-nums; }
+  .big:disabled { cursor: default; opacity: .4; }
+  .big.picked { opacity: 1; background: var(--forest); }
+  .big.picked, .big.picked b { color: var(--cream); }
+  .big.picked.wrong { background: var(--red); border-color: var(--red); }
+  .big.answer { opacity: 1; border-width: 3px; }
+
+  .btn { font: 700 17px/1 var(--sans); padding: 16px; min-height: 54px; width: 100%; background: var(--forest); color: var(--cream); border: 0; cursor: pointer; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn.ghost { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; text-align: center; }
+
+  .feedback { border-top: 1px solid var(--sage); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .verdict { font-family: var(--serif); font-weight: 700; font-size: 22px; color: var(--forest); margin: 0; }
+  .verdict.wrong { color: var(--red); }
+  .sum { font-variant-numeric: tabular-nums; border: 1px solid var(--sage); padding: 10px 12px; font-size: 14px; display: grid; gap: 4px; }
+  .sum div { display: flex; justify-content: space-between; gap: 10px; }
+  .sum .tot { border-top: 1px solid var(--forest); padding-top: 6px; font-weight: 700; color: var(--forest); }
+  .rule { background: var(--forest); color: var(--cream); padding: 12px 14px; font-size: 15px; }
+  .rule b { display: block; font-size: 11px; letter-spacing: .14em; color: var(--sage); margin-bottom: 4px; }
+
+  .score { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--forest); margin: 0; font-variant-numeric: tabular-nums; }
+  .score small { font-size: 24px; color: var(--muted); }
+  .end-msg { font-family: var(--serif); font-size: 20px; color: var(--forest); margin: 0; }
+  .table { border-top: 1px solid var(--sage); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .table div { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--sage); }
+  .table .st { font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+  .table .st.ok { color: var(--forest); }
+  .table .st.ko { color: var(--red); }
+
+  footer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--sage); padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .feedback, .card.end { animation: in .25s ease-out; }
+    @keyframes in { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./">‹ Todos os exercícios</a>
+  <header>
+    <div class="kicker">IA Lab · Lição 3 · Work</div>
+    <h1>Encontra as excepções</h1>
+    <p class="lead">O fecho semanal da Pastelaria Acácia. Cinco comprovativos chegaram pelo WhatsApp. Confere-os contra o extracto M-Pesa, como farias antes de aprovar o trabalho do Work.</p>
+  </header>
+
+  <section class="data" aria-label="Os dados da semana">
+    <div>
+      <div class="label">Comprovativos (WhatsApp)</div>
+      <div class="row"><b>C1 · MP-4471</b><span>1.800 MZN · 19/10</span></div>
+      <div class="row"><b>C2 · MP-4472</b><span>2.500 MZN · 20/10</span></div>
+      <div class="row"><b>C3 · MP-4475</b><span>3.200 MZN · 21/10</span></div>
+      <div class="row"><b>C4 · MP-4475</b><span>3.200 MZN · 21/10</span></div>
+      <div class="row"><b>C5 · MP-4479</b><span>1.500 MZN · 22/10</span></div>
+    </div>
+    <div>
+      <div class="label">Extracto M-Pesa</div>
+      <div class="row"><b>E1 · MP-4471</b><span>+1.800 · 19/10</span></div>
+      <div class="row"><b>E2 · MP-4472</b><span>+2.050 · 20/10</span></div>
+      <div class="row"><b>E3 · MP-4475</b><span>+3.200 · 21/10</span></div>
+      <div class="row out"><b>E4 · MP-4480</b><span>-3.000 · farinha</span></div>
+    </div>
+    <p class="foot">A referência e o montante decidem. A data só ajuda.</p>
+  </section>
+
+  <div class="steps" id="steps"></div>
+
+  <main id="stage"></main>
+
+  <footer>Dados fictícios. Esta página não guarda as tuas respostas.</footer>
+</div>
+
+<script>
+const ST = { OK: "Confirmado", VD: "Valor diferente", DU: "Duplicado", SM: "Sem movimento" };
+const ITEMS = [
+  { id: "C1", ref: "MP-4471", v: "1.800", k: "OK", why: "A referência e o montante batem com E1." },
+  { id: "C2", ref: "MP-4472", v: "2.500", k: "VD", why: "A referência bate com E2, mas o extracto diz 2.050. Fica por confirmar com a cliente." },
+  { id: "C3", ref: "MP-4475", v: "3.200", k: "OK", why: "A referência e o montante batem com E3." },
+  { id: "C4", ref: "MP-4475", v: "3.200", k: "DU", why: "A mesma referência que C3. É a mesma captura enviada duas vezes: conta como um pagamento." },
+  { id: "C5", ref: "MP-4479", v: "1.500", k: "SM", why: "Há captura, mas nenhum movimento com esta referência. Não entra como recebido." }
+];
+const E4 = {
+  q: "E se o Work puser a E4 (MP-4480, -3.000, farinha) na conferência dos clientes?",
+  opts: [
+    { t: "Está certo. É um movimento da semana e tem de entrar.", ok: false },
+    { t: "Está errado. É uma saída: pagaste a farinha. Não corresponde a nenhum comprovativo de cliente.", ok: true },
+    { t: "Depende. Fica como sem movimento.", ok: false }
+  ],
+  why: "Numa conferência de recebimentos só entram as entradas. A E4 é dinheiro que saiu, por isso fica fora da tabela dos clientes."
+};
+const TOTAL = {
+  q: "Quanto dinheiro de clientes entrou de facto na conta esta semana?",
+  opts: [
+    { v: "12.200 MZN", d: "A soma dos cinco comprovativos", ok: false },
+    { v: "7.500 MZN", d: "C1 + C2 + C3, pelos valores das capturas", ok: false },
+    { v: "7.050 MZN", d: "E1 + E2 + E3, pelo extracto", ok: true },
+    { v: "4.050 MZN", d: "O extracto todo, com a farinha descontada", ok: false }
+  ],
+  why: {
+    "12.200 MZN": "Somaste as capturas. Mas C4 é repetida e C5 não tem dinheiro por trás.",
+    "7.500 MZN": "Usaste o valor da captura de C2 (2.500). O que entrou foi 2.050.",
+    "4.050 MZN": "Descontaste a farinha. É uma saída, e a pergunta é sobre o que os clientes pagaram."
+  }
+};
+const LABELS = ["Comprovativos", "A linha E4", "O total"];
+
+let stage = document.getElementById("stage");
+let step = 0, pick = {}, pts = 0, results = {};
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function drawSteps() {
+  document.getElementById("steps").innerHTML = LABELS.map((l, k) => `<span class="${k < step ? "done" : k === step ? "now" : ""}">${k + 1}. ${l.toUpperCase()}</span>`).join("");
+}
+function nextBtn(label) {
+  const b = document.getElementById("next");
+  b.addEventListener("click", () => { step++; [s1, s2, s3, end][step](); window.scrollTo({ top: 0, behavior: "smooth" }); });
+  b.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// ---- passo 1: classificar os comprovativos ----
+function s1() {
+  step = 0; pick = {}; drawSteps();
+  stage.innerHTML = `
+    <section class="card">
+      <div><div class="label">Passo 1 de 3</div><p class="q">Classifica cada comprovativo.</p></div>
+      ${ITEMS.map((it, j) => `
+        <div class="item" id="i${j}">
+          <span class="id">${it.id} <small>· ${it.ref} · ${it.v} MZN</small></span>
+          <div class="opts">${Object.entries(ST).map(([k, n]) => `<button class="opt" id="o${j}${k}" data-j="${j}" data-k="${k}" aria-pressed="false">${n.toUpperCase()}</button>`).join("")}</div>
+          <p class="res" id="r${j}" hidden></p>
+        </div>`).join("")}
+      <button class="btn" id="check" disabled>Verificar</button>
+      <p class="hint" id="left">Faltam 5 comprovativos.</p>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    const j = b.dataset.j; pick[j] = b.dataset.k;
+    Object.keys(ST).forEach(k => document.getElementById("o" + j + k).setAttribute("aria-pressed", pick[j] === k));
+    const n = ITEMS.length - Object.keys(pick).length;
+    document.getElementById("check").disabled = n > 0;
+    document.getElementById("left").textContent = n ? `Faltam ${n} ${n === 1 ? "comprovativo" : "comprovativos"}.` : "Tudo classificado. Carrega em Verificar.";
+  }));
+  document.getElementById("check").addEventListener("click", () => {
+    let ok = 0;
+    ITEMS.forEach((it, j) => {
+      const right = pick[j] === it.k; if (right) ok++;
+      results[it.id] = right;
+      document.getElementById("i" + j).classList.add(right ? "right" : "wrong");
+      const r = document.getElementById("r" + j); r.hidden = false;
+      r.innerHTML = `<b>${right ? "Certo" : ST[it.k]}.</b> ${esc(it.why)}`;
+    });
+    pts += ok;
+    stage.querySelectorAll(".opt").forEach(b => b.disabled = true);
+    document.getElementById("check").hidden = true; document.getElementById("left").hidden = true;
+    document.getElementById("fb").innerHTML = `
+      <div class="feedback">
+        <p class="verdict ${ok === ITEMS.length ? "" : "wrong"}">${ok} de ${ITEMS.length} certos.</p>
+        <div class="rule"><b>REGRA</b>Um comprovativo não é uma confirmação bancária. Só o extracto diz se o dinheiro entrou.</div>
+        <button class="btn" id="next">Seguinte</button>
+      </div>`;
+    nextBtn();
+  });
+}
+
+// ---- passo 2 e 3: uma pergunta de escolha ----
+function single(label, q, opts, render, onPick) {
+  drawSteps();
+  stage.innerHTML = `
+    <section class="card">
+      <div><div class="label">${label}</div><p class="q">${esc(q)}</p></div>
+      <div class="bigs">${opts.map((o, j) => `<button class="big" id="b${j}" data-j="${j}">${render(o)}</button>`).join("")}</div>
+      <div id="fb" aria-live="polite"></div>
+    </section>`;
+  stage.querySelectorAll(".big").forEach(b => b.addEventListener("click", () => {
+    const j = +b.dataset.j, o = opts[j];
+    stage.querySelectorAll(".big").forEach(x => x.disabled = true);
+    b.classList.add("picked");
+    if (!o.ok) { b.classList.add("wrong"); document.getElementById("b" + opts.findIndex(x => x.ok)).classList.add("answer"); }
+    else pts++;
+    document.getElementById("fb").innerHTML = onPick(o);
+    nextBtn();
+  }));
+}
+
+function s2() {
+  single("Passo 2 de 3", E4.q, E4.opts, o => esc(o.t), o => `
+    <div class="feedback">
+      <p class="verdict ${o.ok ? "" : "wrong"}">${o.ok ? "Certo." : "É uma saída."}</p>
+      <p class="why">${esc(E4.why)}</p>
+      <button class="btn" id="next">Seguinte</button>
+    </div>`);
+  results.E4 = null;
+}
+
+function s3() {
+  single("Passo 3 de 3", TOTAL.q, TOTAL.opts, o => `<b>${o.v}</b><span>${esc(o.d)}</span>`, o => `
+    <div class="feedback">
+      <p class="verdict ${o.ok ? "" : "wrong"}">${o.ok ? "Certo. 7.050 MZN." : "Entraram 7.050 MZN."}</p>
+      ${o.ok ? "" : `<p class="why">${esc(TOTAL.why[o.v])}</p>`}
+      <div class="sum">
+        <div><span>E1 · C1 · MP-4471</span><span>1.800</span></div>
+        <div><span>E2 · C2 · MP-4472</span><span>2.050</span></div>
+        <div><span>E3 · C3 · MP-4475</span><span>3.200</span></div>
+        <div class="tot"><span>Entrou na conta</span><span>7.050 MZN</span></div>
+      </div>
+      <p class="why">Ainda faltam 450 MZN de C2, se a cliente pagou 2.500 como diz a captura. E os 1.500 de C5 não entraram.</p>
+      <button class="btn" id="next">Ver o resultado</button>
+    </div>`);
+}
+
+function end() {
+  step = 3;
+  drawSteps();
+  const total = ITEMS.length + 2;
+  const msg = pts === total ? "Tudo certo. Foi esta a conferência que o Work tem de passar antes de guardares o fluxo."
+    : pts >= total - 2 ? "Bom resultado. As excepções escondem-se nas linhas que parecem arrumadas."
+    : "Volta à regra: referência e montante primeiro, e só o extracto confirma dinheiro.";
+  stage.innerHTML = `
+    <section class="card end">
+      <div><div class="label">O teu resultado</div><p class="score">${pts}<small> / ${total}</small></p></div>
+      <p class="end-msg">${msg}</p>
+      <div class="label">A tabela conferida</div>
+      <div class="table">${ITEMS.map(it => `<div><span>${it.id} · ${it.ref} · ${it.v}</span><span class="st ${it.k === "OK" ? "ok" : "ko"}">${ST[it.k]}</span></div>`).join("")}
+        <div><span>E4 · MP-4480 · -3.000</span><span class="st">Fora (saída)</span></div></div>
+      <div class="rule"><b>ANTES DE COBRAR</b>Nenhuma mensagem de cobrança sai sem uma pessoa confirmar C2 e C5.</div>
+      <button class="btn ghost" id="again">Fazer outra vez</button>
+    </section>`;
+  step = 3;
+  document.getElementById("again").addEventListener("click", () => { pts = 0; results = {}; s1(); window.scrollTo({ top: 0 }); });
+}
+
+s1();
+</script>
+</body>
+</html>
